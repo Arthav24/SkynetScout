@@ -1,0 +1,4 @@
+bool return_to_home
+---
+bool success
+string message
