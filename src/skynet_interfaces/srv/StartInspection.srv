@@ -1,0 +1,4 @@
+int8 inspection_route_no
+---
+bool success
+string message

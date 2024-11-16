@@ -1,0 +1,13 @@
+byte OK=0
+byte WARN=1
+byte ERROR=2
+byte STALE=3
+byte CRACK=4
+byte MBEAMS=5
+byte HOBJECT=6
+byte level
+string name
+string message
+byte type
+geometry_msgs/Pose position
+string location
