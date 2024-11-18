@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(anamoly_detection)
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
+if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif ()
 
 ###################################
 # find dependencies
@@ -18,6 +18,8 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(catch_ros2 REQUIRED)
 find_package(Doxygen REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(cv_bridge REQUIRED)
 
 ############################################
 # Set up level 2 unit test (i.e, integration test)
@@ -27,46 +29,49 @@ find_package(Doxygen REQUIRED)
 #  set(CMAKE_CXX_FLAGS "--coverage")
 #  set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE "ON")
 #endif()
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # comment the line when a copyright and license is added to all source files
-  set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # comment the line when this package is in a git repo and when
-  # a copyright and license is added to all source files
-  set(ament_cmake_cpplint_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
-  #   build the integration test
-  ###########################################################################
-  # 1.) BUILD AND INSTALL THE INTEGRATION TEST NODE (aka Node that performs the test)  ##
-  ###########################################################################
-  # This is the node in which integration tests occur
-  add_executable(AnamolyDetectionTest
-          test/anamoly_detection_integration_test.cc
-  )
-  # The link libraries call this node with "catch_ros2::catch_ros2_with_node_main"
-  # to get the default integration test node main function
-  target_link_libraries(AnamolyDetectionTest
-          catch_ros2::catch_ros2_with_node_main
-  )
-  ament_target_dependencies(AnamolyDetectionTest
-          rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs
-  )
-  install(TARGETS
-          AnamolyDetectionTest
-          DESTINATION lib/${PROJECT_NAME}
-  )
+if (BUILD_TESTING)
+    find_package(ament_lint_auto REQUIRED)
+    # the following line skips the linter which checks for copyrights
+    # comment the line when a copyright and license is added to all source files
+    set(ament_cmake_copyright_FOUND TRUE)
+    # the following line skips cpplint (only works in a git repo)
+    # comment the line when this package is in a git repo and when
+    # a copyright and license is added to all source files
+    set(ament_cmake_cpplint_FOUND TRUE)
+    ament_lint_auto_find_test_dependencies()
+    #   build the integration test
+    ###########################################################################
+    # 1.) BUILD AND INSTALL THE INTEGRATION TEST NODE (aka Node that performs the test)  ##
+    ###########################################################################
+    # This is the node in which integration tests occur
+    add_executable(AnamolyDetectionTest
+            test/anamoly_detection_integration_test.cc
+    )
+    # The link libraries call this node with "catch_ros2::catch_ros2_with_node_main"
+    # to get the default integration test node main function
+    target_link_libraries(AnamolyDetectionTest
+            catch_ros2::catch_ros2_with_node_main
+    )
+    target_include_directories(AnamolyDetectionTest PUBLIC
+            ${OpenCV_INCLUDE_DIRS}
+    )
+    ament_target_dependencies(AnamolyDetectionTest
+            rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV
+    )
+    install(TARGETS
+            AnamolyDetectionTest
+            DESTINATION lib/${PROJECT_NAME}
+    )
 
-  ######################################
-  ## 2.) ADD INTEGRATION TEST SUPPORT ##
-  ######################################
-  # This CMake function allows the integration test to be run
-  # when running "colcon test".
-  catch_ros2_add_integration_test (AnamolyDetection_Test
-          LAUNCH_FILE integration_test.launch.yaml
-  )
-endif()
+    ######################################
+    ## 2.) ADD INTEGRATION TEST SUPPORT ##
+    ######################################
+    # This CMake function allows the integration test to be run
+    # when running "colcon test".
+    catch_ros2_add_integration_test(AnamolyDetection_Test
+            LAUNCH_FILE integration_test.launch.yaml
+    )
+endif ()
 
 ###################################################
 # Create the compilation database for clangd and move it out of the build dir.
@@ -80,30 +85,30 @@ execute_process(COMMAND "ln" "-s" "-r" "${CMAKE_BINARY_DIR}/compile_commands.jso
 # ref: https://cmake.org/cmake/help/latest/module/FindDoxygen.html
 ###################################################
 if (DOXYGEN_FOUND)
-  set( DOXYGEN_OUTPUT_DIRECTORY     ${PROJECT_SOURCE_DIR}/docs )
-  set( DOXYGEN_COLLABORATION_GRAPH  YES )
-  set( DOXYGEN_EXTRACT_ALL          YES )
-  set( DOXYGEN_CLASS_DIAGRAMS       YES )
-  set( DOXYGEN_HIDE_UNDOC_RELATIONS NO )
-  set( DOXYGEN_HAVE_DOT             YES )
-  set( DOXYGEN_CLASS_GRAPH          YES )
-  set( DOXYGEN_CALL_GRAPH           YES )
-  set( DOXYGEN_CALLER_GRAPH         YES )
-  set( DOXYGEN_COLLABORATION_GRAPH  YES )
-  set( DOXYGEN_BUILTIN_STL_SUPPORT  YES )
-  set( DOXYGEN_EXTRACT_PRIVATE      YES )
-  set( DOXYGEN_EXTRACT_PACKAGE      YES )
-  set( DOXYGEN_EXTRACT_STATIC       YES )
-  set( DOXYGEN_EXTRACT_LOCALMETHODS YES )
-  set( DOXYGEN_UML_LOOK             YES )
-  set( DOXYGEN_UML_LIMIT_NUM_FIELDS 50 )
-  set( DOXYGEN_TEMPLATE_RELATIONS   YES )
-  set( DOXYGEN_DOT_GRAPH_MAX_NODES  100 )
-  set( DOXYGEN_MAX_DOT_GRAPH_DEPTH  0 )
-  set( DOXYGEN_DOT_TRANSPARENT      YES )
-else()
-  message( FATAL_ERROR "Doxygen needs to be installed to generate the doxygen documentation" )
-endif()
+    set(DOXYGEN_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)
+    set(DOXYGEN_COLLABORATION_GRAPH YES)
+    set(DOXYGEN_EXTRACT_ALL YES)
+    set(DOXYGEN_CLASS_DIAGRAMS YES)
+    set(DOXYGEN_HIDE_UNDOC_RELATIONS NO)
+    set(DOXYGEN_HAVE_DOT YES)
+    set(DOXYGEN_CLASS_GRAPH YES)
+    set(DOXYGEN_CALL_GRAPH YES)
+    set(DOXYGEN_CALLER_GRAPH YES)
+    set(DOXYGEN_COLLABORATION_GRAPH YES)
+    set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
+    set(DOXYGEN_EXTRACT_PRIVATE YES)
+    set(DOXYGEN_EXTRACT_PACKAGE YES)
+    set(DOXYGEN_EXTRACT_STATIC YES)
+    set(DOXYGEN_EXTRACT_LOCALMETHODS YES)
+    set(DOXYGEN_UML_LOOK YES)
+    set(DOXYGEN_UML_LIMIT_NUM_FIELDS 50)
+    set(DOXYGEN_TEMPLATE_RELATIONS YES)
+    set(DOXYGEN_DOT_GRAPH_MAX_NODES 100)
+    set(DOXYGEN_MAX_DOT_GRAPH_DEPTH 0)
+    set(DOXYGEN_DOT_TRANSPARENT YES)
+else ()
+    message(FATAL_ERROR "Doxygen needs to be installed to generate the doxygen documentation")
+endif ()
 
 ###################################
 # Specify Targets
@@ -121,16 +126,19 @@ doxygen_add_docs(docs           # target name
 #)
 
 ###################################
-# Main anamoly detection
+# Main anomaly detection
 ###################################
 add_library(anamolyDetection src/anamoly_detection.cc)
 
 # Add executable dependencies:
 target_include_directories(anamolyDetection PUBLIC
         include/
+        ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(anamolyDetection rclcpp geometry_msgs tf2 tf2_ros)
-#target_link_libraries(anamolyDetection <>)
+ament_target_dependencies(anamolyDetection rclcpp sensor_msgs geometry_msgs tf2 tf2_ros OpenCV)
+target_link_libraries(anamolyDetection BeamsDetect cracksDetect objectDetect)
+
+
 
 ###################################
 # Misaligned Beams detection
@@ -140,8 +148,9 @@ add_library(BeamsDetect src/anamoly_beams_detect.cc)
 # Add executable dependencies:
 target_include_directories(BeamsDetect PUBLIC
         include/
+        ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(BeamsDetect rclcpp geometry_msgs tf2 tf2_ros)
+ament_target_dependencies(BeamsDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros OpenCV)
 
 ###################################
 # Crack detection
@@ -151,8 +160,9 @@ add_library(cracksDetect src/anamoly_crack_detect.cc)
 # Add executable dependencies:
 target_include_directories(cracksDetect PUBLIC
         include/
+        ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(cracksDetect rclcpp geometry_msgs tf2 tf2_ros)
+ament_target_dependencies(cracksDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros OpenCV)
 
 ###################################
 # Object detection
@@ -162,9 +172,9 @@ add_library(objectDetect src/anamoly_object_detect.cc)
 # Add executable dependencies:
 target_include_directories(objectDetect PUBLIC
         include/
+        ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(objectDetect rclcpp geometry_msgs tf2 tf2_ros)
-
+ament_target_dependencies(objectDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros OpenCV)
 
 
 ###################################
