@@ -2,7 +2,8 @@
 
 
 scout::ConcreteCracks::ConcreteCracks() {
-
+  mCamInfoSubs = nullptr;
+  mImageSubs = nullptr;
 }
 scout::ConcreteCracks::~ConcreteCracks() {
 
