@@ -8,8 +8,11 @@
 #include <functional>
 #include <memory>
 #include <string>
-//#include <rclcpp/rclcpp.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <future>
+#include <opencv4/opencv2/opencv.hpp>
+#include <sensor_msgs/msg/image.hpp>
+#include <sensor_msgs/msg/camera_info.hpp>
 
 namespace scout {
 
@@ -18,6 +21,9 @@ class ConcreteCracks {
   ConcreteCracks();
   ~ConcreteCracks();
  private:
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr mImageSubs;
+  rclcpp::Subscription<sensor_msgs::msg::CameraInfo >::SharedPtr mCamInfoSubs;
+  void prcessImage(cv::Mat);
 
 };
 

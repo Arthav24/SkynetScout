@@ -2,6 +2,8 @@
 
 
 scout::HObject::HObject() {
+  mCamInfoSubs = nullptr;
+  mImageSubs = nullptr;
 
 }
 scout::HObject::~HObject() {

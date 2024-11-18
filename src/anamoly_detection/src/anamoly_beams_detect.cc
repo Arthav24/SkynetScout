@@ -2,9 +2,14 @@
 
 
 scout::MisalignedBeams::MisalignedBeams() {
+  mCamInfoSubs = nullptr;
+  mImageSubs = nullptr;
 
 }
 scout::MisalignedBeams::~MisalignedBeams() {
 
 };
 
+void scout::MisalignedBeams::processImage(cv::Mat) {
+
+}
