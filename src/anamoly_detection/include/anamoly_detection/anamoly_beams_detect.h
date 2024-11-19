@@ -20,11 +20,11 @@ class MisalignedBeams {
  public:
   MisalignedBeams();
   ~MisalignedBeams();
+  void processImage(cv::Mat);
  private:
 
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr mImageSubs;
   rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr mCamInfoSubs;
-  void processImage(cv::Mat);
 
 };
 

@@ -20,10 +20,11 @@ class HObject {
  public:
   HObject();
   ~HObject();
+  void processImage(cv::Mat);
+
  private:
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr mImageSubs ;
   rclcpp::Subscription<sensor_msgs::msg::CameraInfo >::SharedPtr mCamInfoSubs;
-  void prcessImage(cv::Mat);
 };
 
 } // namespace end

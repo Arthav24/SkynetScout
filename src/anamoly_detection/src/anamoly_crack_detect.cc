@@ -9,3 +9,6 @@ scout::ConcreteCracks::~ConcreteCracks() {
 
 };
 
+void scout::ConcreteCracks::processImage(cv::Mat) {
+
+}
