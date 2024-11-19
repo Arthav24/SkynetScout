@@ -10,3 +10,6 @@ scout::HObject::~HObject() {
 
 };
 
+void scout::HObject::processImage(cv::Mat) {
+
+}

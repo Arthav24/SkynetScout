@@ -20,10 +20,11 @@ class ConcreteCracks {
  public:
   ConcreteCracks();
   ~ConcreteCracks();
+  void processImage(cv::Mat);
+
  private:
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr mImageSubs;
-  rclcpp::Subscription<sensor_msgs::msg::CameraInfo >::SharedPtr mCamInfoSubs;
-  void prcessImage(cv::Mat);
+  rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr mCamInfoSubs;
 
 };
 

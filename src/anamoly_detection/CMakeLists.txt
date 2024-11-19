@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(anamoly_detection)
 
+set(CMAKE_CXX_STANDARD 17)
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif ()
@@ -71,6 +72,30 @@ if (BUILD_TESTING)
     catch_ros2_add_integration_test(AnamolyDetection_Test
             LAUNCH_FILE integration_test.launch.yaml
     )
+    include(CTest)
+
+    ###############
+    ## UNIT TEST ##
+    ###############
+    add_executable(anamoly_detection_unitTests
+            test/anamoly_detection_unit_test.cc
+    )
+    # Linking a unit test executable with catch_ros2::catch_ros2_with_main
+    # provides the default Catch2 main function to the executable.
+    target_include_directories(anamoly_detection_unitTests PUBLIC
+            include
+            ${OpenCV_INCLUDE_DIRS}
+    )
+    ament_target_dependencies(anamoly_detection_unitTests
+            rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV
+    )
+    target_link_libraries(anamoly_detection_unitTests
+            catch_ros2::catch_ros2_with_main
+            BeamsDetect cracksDetect objectDetect
+            ${OpenCV_LIBS}
+    )
+
+    add_test(NAME AnamolyDetectionUnitTests COMMAND anamoly_detection_unitTests)
 endif ()
 
 ###################################################
@@ -126,21 +151,6 @@ doxygen_add_docs(docs           # target name
 #)
 
 ###################################
-# Main anomaly detection
-###################################
-add_library(anamolyDetection src/anamoly_detection.cc)
-
-# Add executable dependencies:
-target_include_directories(anamolyDetection PUBLIC
-        include/
-        ${OpenCV_INCLUDE_DIRS}
-)
-ament_target_dependencies(anamolyDetection rclcpp sensor_msgs geometry_msgs tf2 tf2_ros OpenCV)
-target_link_libraries(anamolyDetection BeamsDetect cracksDetect objectDetect)
-
-
-
-###################################
 # Misaligned Beams detection
 ###################################
 add_library(BeamsDetect src/anamoly_beams_detect.cc)
@@ -150,7 +160,7 @@ target_include_directories(BeamsDetect PUBLIC
         include/
         ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(BeamsDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros OpenCV)
+ament_target_dependencies(BeamsDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros )
 
 ###################################
 # Crack detection
@@ -162,7 +172,7 @@ target_include_directories(cracksDetect PUBLIC
         include/
         ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(cracksDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros OpenCV)
+ament_target_dependencies(cracksDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros)
 
 ###################################
 # Object detection
@@ -174,8 +184,22 @@ target_include_directories(objectDetect PUBLIC
         include/
         ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(objectDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros OpenCV)
+ament_target_dependencies(objectDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros )
 
+
+###################################
+# Main anomaly detection
+###################################
+add_library(anamolyDetection src/anamoly_detection.cc)
+
+# Add executable dependencies:
+target_include_directories(anamolyDetection PUBLIC
+        include/
+        ${OpenCV_INCLUDE_DIRS}
+)
+ament_target_dependencies(anamolyDetection rclcpp sensor_msgs geometry_msgs tf2 tf2_ros  )
+
+target_link_libraries(anamolyDetection BeamsDetect cracksDetect objectDetect ${OpenCV_LIBS})
 
 ###################################
 # Installation
