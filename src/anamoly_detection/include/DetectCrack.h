@@ -1,9 +1,15 @@
 /**
- * @file anamoly_crack_detect.h
  * @brief This header file includes declaration for crack detection.
+ * @file DetectCrack.h
+ * @date November 19 2024
+ * @version 1.5
+ * @author Anirudh S
+ * @copyright Copyright (c) 2024
  */
+
 #ifndef ANAMOLY_CRACK_DETECTION_H_
 #define ANAMOLY_CRACK_DETECTION_H_
+
 #include <chrono>
 #include <functional>
 #include <memory>
@@ -16,14 +22,21 @@
 
 namespace scout {
 
-class ConcreteCracks {
+/**
+ * @class DetectCrack
+ * @brief DetectCrack class declaration
+ */
+class DetectCrack {
  public:
-  ConcreteCracks();
-  ~ConcreteCracks();
+  DetectCrack();
+  ~DetectCrack();
   void processImage(cv::Mat);
 
  private:
+  /*image subscriber member*/
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr mImageSubs;
+
+  /*camera info subscriber member */
   rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr mCamInfoSubs;
 
 };

@@ -28,7 +28,6 @@ find_package(Doxygen REQUIRED)
 
 ###################################################
 # Doxygen Rules
-# ref: https://cmake.org/cmake/help/latest/module/FindDoxygen.html
 ###################################################
 if (DOXYGEN_FOUND)
     set(DOXYGEN_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)
@@ -60,7 +59,7 @@ endif ()
 # Specify Targets
 ###################################
 # create a target to build documentation
-doxygen_add_docs(docs           # target name
+doxygen_add_docs(docs    
         # List of files or directories
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/include
@@ -69,24 +68,16 @@ doxygen_add_docs(docs           # target name
 
 if (BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)
-    # the following line skips the linter which checks for copyrights
-    # comment the line when a copyright and license is added to all source files
+    
     set(ament_cmake_copyright_FOUND TRUE)
-    # the following line skips cpplint (only works in a git repo)
-    # comment the line when this package is in a git repo and when
-    # a copyright and license is added to all source files
+    
     set(ament_cmake_cpplint_FOUND TRUE)
     ament_lint_auto_find_test_dependencies()
-    #   build the integration test
-    ###########################################################################
-    # 1.) BUILD AND INSTALL THE INTEGRATION TEST NODE (aka Node that performs the test)  ##
-    ###########################################################################
-    # This is the node in which integration tests occur
+    
     add_executable(scoutManagerTest
             test/skynet_manager_integration_test.cc
     )
-    # The link libraries call this node with "catch_ros2::catch_ros2_with_node_main"
-    # to get the default integration test node main function
+    
     target_link_libraries(scoutManagerTest
             catch_ros2::catch_ros2_with_node_main
     )
@@ -98,18 +89,13 @@ if (BUILD_TESTING)
             DESTINATION lib/${PROJECT_NAME}
     )
 
-    ######################################
-    ## 2.) ADD INTEGRATION TEST SUPPORT ##
-    ######################################
-    # This CMake function allows the integration test to be run
-    # when running "colcon test".
     catch_ros2_add_integration_test(SkynetScoutManager_Test
             LAUNCH_FILE integration_test.launch.yaml
     )
 endif ()
 
 
-add_executable(manager src/manager.cc)
+add_executable(manager src/SkynetManager.cc)
 target_include_directories(manager PUBLIC include)
 ament_target_dependencies(manager rclcpp std_msgs skynet_interfaces tf2 tf2_ros)
 

@@ -1,9 +1,16 @@
 /**
- * @file anamoly_object_detect.h
- * @brief This header file includes declaration for hazardous object detection.
+ * @brief This header file includes declaration for 
+ *        hazardous object detection.
+ * @file DetectHazardObject.h
+ * @date November 20 2024
+ * @version 1.5
+ * @author Anirudh
+ * @copyright Copyright (c) 2024
  */
+
 #ifndef ANAMOLY_OBJECT_DETECTION_H_
 #define ANAMOLY_OBJECT_DETECTION_H_
+
 #include <chrono>
 #include <functional>
 #include <memory>
@@ -16,14 +23,26 @@
 
 namespace scout {
 
-class HObject {
+/**
+ * @class DetectionPipeline
+ * @brief Anomlay Detection class that runs the detection pipeline
+ */
+class DetectHazardObject {
  public:
-  HObject();
-  ~HObject();
+ /*constructor*/
+  DetectHazardObject();
+
+  /*Destructor*/
+  ~DetectHazardObject();
+  
+  /*frame capture process*/
   void processImage(cv::Mat);
 
  private:
+  /*image subscriber member*/
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr mImageSubs ;
+
+  /*camera info subscriber member */
   rclcpp::Subscription<sensor_msgs::msg::CameraInfo >::SharedPtr mCamInfoSubs;
 };
 

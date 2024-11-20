@@ -45,22 +45,22 @@ if (BUILD_TESTING)
     # 1.) BUILD AND INSTALL THE INTEGRATION TEST NODE (aka Node that performs the test)  ##
     ###########################################################################
     # This is the node in which integration tests occur
-    add_executable(AnamolyDetectionTest
+    add_executable(anomalyDetectionTest
             test/anamoly_detection_integration_test.cc
     )
     # The link libraries call this node with "catch_ros2::catch_ros2_with_node_main"
     # to get the default integration test node main function
-    target_link_libraries(AnamolyDetectionTest
+    target_link_libraries(anomalyDetectionTest
             catch_ros2::catch_ros2_with_node_main
     )
-    target_include_directories(AnamolyDetectionTest PUBLIC
+    target_include_directories(anomalyDetectionTest PUBLIC
             ${OpenCV_INCLUDE_DIRS}
     )
-    ament_target_dependencies(AnamolyDetectionTest
+    ament_target_dependencies(anomalyDetectionTest
             rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV
     )
     install(TARGETS
-            AnamolyDetectionTest
+            anomalyDetectionTest
             DESTINATION lib/${PROJECT_NAME}
     )
 
@@ -69,7 +69,7 @@ if (BUILD_TESTING)
     ######################################
     # This CMake function allows the integration test to be run
     # when running "colcon test".
-    catch_ros2_add_integration_test(AnamolyDetection_Test
+    catch_ros2_add_integration_test(anomalyDetection_Test
             LAUNCH_FILE integration_test.launch.yaml
     )
     include(CTest)
@@ -95,7 +95,7 @@ if (BUILD_TESTING)
             ${OpenCV_LIBS}
     )
 
-    add_test(NAME AnamolyDetectionUnitTests COMMAND anamoly_detection_unitTests)
+    add_test(NAME anomalyDetectionUnitTests COMMAND anamoly_detection_unitTests)
 endif ()
 
 ###################################################
@@ -153,7 +153,7 @@ doxygen_add_docs(docs           # target name
 ###################################
 # Misaligned Beams detection
 ###################################
-add_library(BeamsDetect src/anamoly_beams_detect.cc)
+add_library(BeamsDetect src/DetectMisAlignedBeams.cc)
 
 # Add executable dependencies:
 target_include_directories(BeamsDetect PUBLIC
@@ -165,7 +165,7 @@ ament_target_dependencies(BeamsDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_r
 ###################################
 # Crack detection
 ###################################
-add_library(cracksDetect src/anamoly_crack_detect.cc)
+add_library(cracksDetect src/DetectCrack.cc)
 
 # Add executable dependencies:
 target_include_directories(cracksDetect PUBLIC
@@ -177,7 +177,7 @@ ament_target_dependencies(cracksDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_
 ###################################
 # Object detection
 ###################################
-add_library(objectDetect src/anamoly_object_detect.cc)
+add_library(objectDetect src/DetectHazardObject.cc)
 
 # Add executable dependencies:
 target_include_directories(objectDetect PUBLIC
@@ -190,16 +190,16 @@ ament_target_dependencies(objectDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_
 ###################################
 # Main anomaly detection
 ###################################
-add_library(anamolyDetection src/anamoly_detection.cc)
+add_library(anomalyDetection src/AnomalyDetection.cc)
 
 # Add executable dependencies:
-target_include_directories(anamolyDetection PUBLIC
+target_include_directories(anomalyDetection PUBLIC
         include/
         ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(anamolyDetection rclcpp sensor_msgs geometry_msgs tf2 tf2_ros  )
+ament_target_dependencies(anomalyDetection rclcpp sensor_msgs geometry_msgs tf2 tf2_ros  )
 
-target_link_libraries(anamolyDetection BeamsDetect cracksDetect objectDetect ${OpenCV_LIBS})
+target_link_libraries(anomalyDetection BeamsDetect cracksDetect objectDetect ${OpenCV_LIBS})
 
 ###################################
 # Installation
@@ -207,7 +207,7 @@ target_link_libraries(anamolyDetection BeamsDetect cracksDetect objectDetect ${O
 
 # Install executables:
 install(TARGETS
-        anamolyDetection
+        anomalyDetection
         DESTINATION lib/${PROJECT_NAME})
 
 # install launch files
