@@ -8,10 +8,10 @@
 #include "catch_ros2/catch_ros2.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include <opencv4/opencv2/opencv.hpp>
-#include "anamoly_detection/anamoly_detection.h"
-#include "anamoly_detection/anamoly_object_detect.h"
-#include "anamoly_detection/anamoly_crack_detect.h"
-#include "anamoly_detection/anamoly_beams_detect.h"
+#include "DetectCrack.h"
+#include "DetectMisAlignedBeams.h"
+#include "DetectHazardObject.h"
+#include "AnomalyDetection.h"
 
 using catch_ros2::SimulateArgs;
 
@@ -53,7 +53,7 @@ TEST_CASE("Hazardous Object Detection", "[Object Detection]") {
 // Initialize ROS with simulated arguments
   rclcpp::init(args.argc(), args.argv());
 
-  auto mObjectDetection = std::make_unique<scout::HObject>();
+  auto mObjectDetection = std::make_unique<scout::DetectHazardObject>();
 
 // Init test node
   auto node = rclcpp::Node::make_shared("Anamoly_Detection_unittest_node");
@@ -86,7 +86,7 @@ TEST_CASE("Crack Detection", "[crack Detection]") {
 // Initialize ROS with simulated arguments
   rclcpp::init(args.argc(), args.argv());
 
-  auto mcrackDetection = std::make_unique<scout::ConcreteCracks>();
+  auto mcrackDetection = std::make_unique<scout::DetectCrack>();
 
 // Init test node
   auto node = rclcpp::Node::make_shared("Anamoly_Detection_unittest_node");
