@@ -31,8 +31,9 @@ auto Logger = rclcpp::get_logger(""); // create an initial Logger
 class ADTestFixture {
  public:
   ADTestFixture() {
-    Node = rclcpp::Node::make_shared("Anamoly Detection Integration Node");
+    Node = rclcpp::Node::make_shared("Anamoly_Detection_Integration_Node");
     Logger = Node->get_logger();
+    RCLCPP_WARN(Logger,"CALLED INS");
   }
 
   ~ADTestFixture() {
@@ -73,8 +74,6 @@ TEST_CASE_METHOD (ADTestFixture, "Check for 2D Lidar scan", "[integration][Anamo
 
 // Cleanup
   executor->cancel();
-  rclcpp::shutdown();
-
 // Test assertions
   REQUIRE(message_received); // Ensure a message was received
 }
@@ -109,8 +108,6 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera RGB image", "[integratio
 
 // Cleanup
   executor->cancel();
-  rclcpp::shutdown();
-
 // Test assertions
   REQUIRE(message_received); // Ensure a message was received
 }
@@ -145,7 +142,6 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][An
 
 // Cleanup
   executor->cancel();
-  rclcpp::shutdown();
 
 // Test assertions
   REQUIRE(message_received); // Ensure a message was received
@@ -181,7 +177,6 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD Depth pointcloud", "[integratio
 
 // Cleanup
   executor->cancel();
-  rclcpp::shutdown();
 
 // Test assertions
   REQUIRE(message_received); // Ensure a message was received
@@ -201,10 +196,8 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][An
         "oakd_rgb_camera_optical_frame", "map",
         tf2::TimePointZero);
   } catch (const tf2::TransformException &ex) {
-    RCLCPP_INFO(
-        Node->get_logger(), "Could not transform %s to %s: %s",
-        "oakd_rgb_camera_optical_frame"
-        "map", ex.what());
+    RCLCPP_INFO_STREAM(
+        Node->get_logger(), "Could not transform oakd_rgb_camera_optical_frame to map " << ex.what());
   }
 
 // Add the subscription node to the executor
@@ -220,7 +213,6 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][An
 
 // Cleanup
   executor->cancel();
-  rclcpp::shutdown();
 
 // Test assertions
   REQUIRE(tf_received); // Ensure a message was received
