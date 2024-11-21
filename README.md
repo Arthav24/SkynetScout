@@ -1,4 +1,68 @@
-# ENPM700-final-project-boilerplate
+# SkynetScout
+![CICD Workflow status](https://github.com/Arthav24/SkynetScout/actions/workflows/run-unit-test-and-upload-codecov.yml/badge.svg)  [![codecov](https://codecov.io/gh/Arthav24/SkynetScout/graph/badge.svg?token=0MB8LNC5Y1)](https://codecov.io/gh/Arthav24/SkynetScout) [![License](https://img.shields.io/badge/license-APACHE2.0-blue.svg)](LICENSE)
+
+## Project Contributors
+[Amogha Thalihalla Sunil](https://github.com/amoghatsunil),
+Navigator
+<br>[Anirudh Swarnakar](https://github.com/Arthav24), Driver
+
+
+## Overview
+Welcome to the Inspection Robot repository!
+
+This project focuses on developing an autonomous mobile robot capable of navigating cluttered construction sites and detecting critical anomalies such as cracks, misaligned beams, and hazardous objects. The system combines advanced robotics, computer vision, and AI-based anomaly detection to enhance safety and efficiency in construction site inspections.
+
+### Key Components
+- **Autonomous Navigation**
+The robot uses SLAM (Simultaneous Localization and Mapping) and advanced path-planning algorithms to navigate dynamic, cluttered environments.
+Sensors like LiDAR, RGB cameras are employed for mapping and obstacle avoidance.
+- **Anomaly Detection**
+AI-based models are used to detect structural cracks, beam misalignments, and hazardous objects. Data from cameras, LiDAR is processed for real-time detection and reporting.
+- **Orchestration and Communication**
+The skynet_manager package orchestrates all operations, managing inspection workflows, coordinating subsystems, and communicating with site operators and third-party platforms.
+A user-friendly interface allows site supervisors to monitor and control the robot.
+### **Core ROS2 Packages**
+- **anomaly_detection**: Handles anomaly detection, including crack detection, misaligned beam identification, and hazardous object recognition.
+- **skynet_manager**: Oversees inspection operations, interfaces with operators, and integrates with external systems for data sharing and control.
+- **navigation_stack**: OpenNavigation's [Nav2](https://www.opennav.org/) manages autonomous navigation, mapping, and obstacle avoidance.
+Features
+- **Real-Time Performance**: Processes sensor data and provides actionable insights in real time.
+- **Modular Design**: Easily extendable for additional inspection tasks and use cases.
+- **Remote Monitoring**: Allows supervisors to monitor robot operations and receive alerts remotely.
+
+- This repository is designed to accelerate development and deployment of smart inspection solutions, combining cutting-edge robotics and AI technologies to revolutionize construction site operations.
+
+# Setup
+```bash
+rosdep update
+rosdep install --from-paths src --ignore-src -y
+
+sudo apt-get install python3-colcon-clean # this for easy command to clean workspace
+```
+
+## UML Diagram - Initial
+Class dependency diagram of the proposed design
+![image](https://github.com/Sounderya22/Human_Tracker_Team7/blob/main/UML/Phase0/activity_diagram.jpeg)
+
+## Sequence Diagram - Initial
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/SequenceDiagram.png)
+
+## Activity Diagram
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/SequenceDiagram.png)
+
+## Dependency Graph
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/SequenceDiagram.png)
+
+## Backlog
+Product backlog sheet can be found [here](https://umd0-my.sharepoint.com/:x:/g/personal/aniswa_umd_edu/EYVlvxucsS9AoDJi-Hb2Vg8Bc-rh3_DI1Xda5q9So6VFAA?e=bYEpLH&nav=MTVfezMxNTExODU5LUVGMTYtNDQ1OC05QjM0LTIzMzYxNzA3NkQ1NX0)
+
+## Sprint Planning
+Using AIP and pair programming project is planned in sprints.
+- Sprint 1 11/14/2024 to 11/20/2024
+- Sprint 2 11/21/2024 to 11/27/2024
+- Sprint 3 11/28/2024 to 12/04/2024
+
+Planning document can be found [here](https://umd0-my.sharepoint.com/:w:/g/personal/aniswa_umd_edu/Ea2nl0-B74VPrtfKL6HL5icBINMij0fw4KHIhCu9YgxoIg?e=M7oarH)
 
 DRAFT - DRAFT - DRAFT
 
