@@ -51,7 +51,7 @@ Class dependency diagram of the proposed design
 ![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/SequenceDiagram.png)
 
 ## Dependency Graph
-![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/SequenceDiagram.png)
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/screenshots/depGraph.png)
 
 ## Backlog
 Product backlog sheet can be found [here](https://umd0-my.sharepoint.com/:x:/g/personal/aniswa_umd_edu/EYVlvxucsS9AoDJi-Hb2Vg8Bc-rh3_DI1Xda5q9So6VFAA?e=bYEpLH&nav=MTVfezMxNTExODU5LUVGMTYtNDQ1OC05QjM0LTIzMzYxNzA3NkQ1NX0)
@@ -64,104 +64,56 @@ Using AIP and pair programming project is planned in sprints.
 
 Planning document can be found [here](https://umd0-my.sharepoint.com/:w:/g/personal/aniswa_umd_edu/Ea2nl0-B74VPrtfKL6HL5icBINMij0fw4KHIhCu9YgxoIg?e=M7oarH)
 
-DRAFT - DRAFT - DRAFT
+## Proposal Documentation
+The proposal documentation for Phase 0 can be found [here](https://umd0-my.sharepoint.com/:b:/g/personal/aniswa_umd_edu/EaGihlp4oVxEorLV7okp_Y8Bgcndar9_CKrkEHib7L6fNw?e=IfWypV)
 
-![CICD Workflow status](https://github.com/TommyChangUMD/ENPM700-final-project-boilerplate/actions/workflows/run-unit-test-and-upload-codecov.yml/badge.svg) [![codecov](https://codecov.io/gh/TommyChangUMD/ENPM700-final-project-boilerplate/branch/main/graph/badge.svg)](https://codecov.io/gh/TommyChangUMD/ENPM700-final-project-boilerplate) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-This repo provides a template for setting up:
+## Dependencies with licenses
+[OpenCV](https://github.com/opencv/opencv) >= 4.5.0 is licensed under the Apache 2 License.
+<br> [Eigen](https://github.com/OPM/eigen3/tree/master) is MPL2-licensed.
+<br> [ROS2](https://docs.ros.org/en/humble/index.html) is Apache 2 License.
+<br> [NAV2](https://docs.nav2.org/) is Apache 2 License.
 
-  - GitHub CI
-    - `main` branch runs in a ROS 2 Humble container
-  - Codecov badges
-  - Colcon workspace structure
-  - C++ library, `my_model`, that depends on other system libraries such as OpenCV and rclcpp.
-    - The library is *self-contained*
-    - In real life, we download source code of third-party modules and often put the modules as-is into our colcon workspace.  Of course, we make sure the licenses are all compatible.
-  - ROS 2 package, `my_controller`, depends on a C++ library, `my_model`, which is placed into the same colcon workspace.
-  - Establishing package dependency within the colcon workspace.
-    - ie. the ROS 2 package, `my_controller`, will not be built before all of its dependent C++ libraries, such as `my_model`, are built first.
-  - Multiple subscriptions within a ROS2 node all listening to the same topic.
-    - Only one callback function is needed.
-    - More efficient than to have N callback functions.
-    - More efficient than to have N ROS nodes.
-  - ROS2 C++ unit test and integration test.
-  - Doxygen setup
-  - ROS2 launch file
-  - Bash scripts that can be invoked by the `ros2 run ...` command
+## Build Instructions
 
-This software uses the **Model-View-Controller** architecture. 
-  - **Model** = `my_model` module (see [src/my_model/README.md](src/my_model/README.md))
-  - **Controler** = `my_controller` module  (see [src/my_controller/README.md](src/my_controller/README.md))
-  - **View** = Gazebo
+```bash
+# Download the source code:
+  mkdir -p inspection_ws/src/ 
+  git clone https://github.com/Arthav24/SkynetScout.git
+  cd SkynetScout
+# Configure the project and generate a native build system:
+colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --event-handlers console_cohesion+
+# Source overlay
+source install/setup.bash
+```
+### Google Coding Style Verification
+To check how the written code conforms to the Google C++ style guide, 
 
+```sh
+# Install clang-format(ignore if already installed):
+  sudo apt install clangd-format
+# Self-check Google code style conformity using clang-format:
+  clang-format -style=Google -i $( find . -name *.cc | grep -vE -e "^./build/" )
+```
+
+### Static Code Analysis
+To check the static code analysis of this project
+```sh
+# Install Cppcheck (ignore if already installed):
+  sudo apt install clang-tidy
+# Self-check the static code analysis using Cppcheck:
+  clang-tidy -p ./ $( find . -name *.cc | grep -v "/build/" )
+```
 ## How to generate module / package dependency graph
 
 ``` bash
 colcon graph --dot | dot -Tpng -o depGraph.png
 open depGraph.png
 ```
-[<img src=screenshots/depGraph.png
-    width="20%" 
-    style="display: block; margin: 0 auto"
-    />](screenshots/depGraph.png)
-
-
-
-## How to build and run demo
-
-First, make sure we install the catch2 ROS2 package.
-```bash
-$ source /opt/ros/humble/setup.bash  # if needed
-$ sudo apt install ros-${ROS_DISTRO}-catch-ros2
-```
-Now, we can build our system:
-```bash
-rm -rf build/ install/
-colcon build 
-
-```
-And finally, run the demo:
-
-```bash
-source install/setup.bash
-ros2 launch my_controller run_demo.launch.yaml
-```
-example output:
-
-```
-[INFO] [launch]: All log files can be found below /home/tchang/.ros/log/2024-11-14-01-15-43-657639-tchang-IdeaPad-3-17ABA7-2012192
-[INFO] [launch]: Default logging verbosity is set to INFO
-[INFO] [talker-1]: process started with pid [2012193]
-[INFO] [listener-2]: process started with pid [2012195]
-[listener-2] Calling OpenCV function
-[listener-2] [INFO] [1731564943.913295525] [my_model]: Calling ROS function
-[talker-1] Calling OpenCV function
-[talker-1] [INFO] [1731564944.413417817] [my_model]: Calling ROS function
-[talker-1] [INFO] [1731564944.413485842] [talker]: Publishing: 101 Hello, world! 0
-[listener-2] [INFO] [1731564944.413881423] [listener]: subName=subscription0, I heard : 'Hello, world! 0'
-[listener-2] [INFO] [1731564944.413998198] [listener]: subName=subscription1, I heard : 'Hello, world! 0'
-[listener-2] [INFO] [1731564944.414027042] [listener]: subName=subscription2, I heard : 'Hello, world! 0'
-[listener-2] [INFO] [1731564944.414057074] [listener]: subName=subscription3, I heard : 'Hello, world! 0'
-[listener-2] [INFO] [1731564944.414086617] [listener]: subName=subscription4, I heard : 'Hello, world! 0'
-[talker-1] Calling OpenCV function
-[talker-1] [INFO] [1731564944.911201194] [my_model]: Calling ROS function
-[talker-1] [INFO] [1731564944.911250432] [talker]: Publishing: 102 Hello, world! 1
-[listener-2] [INFO] [1731564944.911475601] [listener]: subName=subscription0, I heard : 'Hello, world! 1'
-[listener-2] [INFO] [1731564944.911539017] [listener]: subName=subscription2, I heard : 'Hello, world! 1'
-[listener-2] [INFO] [1731564944.911562413] [listener]: subName=subscription3, I heard : 'Hello, world! 1'
-[listener-2] [INFO] [1731564944.911591467] [listener]: subName=subscription4, I heard : 'Hello, world! 1'
-[listener-2] [INFO] [1731564944.911633512] [listener]: subName=subscription1, I heard : 'Hello, world! 1'
-[talker-1] Calling OpenCV function
-[talker-1] [INFO] [1731564945.411270616] [my_model]: Calling ROS function
-[talker-1] [INFO] [1731564945.411329702] [talker]: Publishing: 103 Hello, world! 2
-
-```
 
 ## How to build tests (unit test and integration test)
-We want to run tests with code coverage.  Therefore, we need to enable the code coverage option.
-
 ```bash
-rm -rf build/ install/
+colcon clean workspace
 colcon build --cmake-args -DCOVERAGE=1 
 ```
 
@@ -180,22 +132,11 @@ First make sure we have run the unit test already.
 colcon test
 ```
 
-### Coverage report for `my_controller`:
+### Coverage report for `anamoly_detection`:
 
 ``` bash
-ros2 run my_controller generate_coverage_report.bash
-open build/my_controller/test_coverage/index.html
-```
-
-### Coverage report for `my_model`:
-
-``` bash
-colcon build \
-       --event-handlers console_cohesion+ \
-       --packages-select my_model \
-       --cmake-target "test_coverage" \
-       --cmake-arg -DUNIT_TEST_ALREADY_RUN=1
-open build/my_model/test_coverage/index.html
+ros2 run anamoly_detection generate_coverage_report.bash
+open build/anamoly_detection/test_coverage/index.html
 ```
 
 ### Automate the previous steps and combine both coverage reports
@@ -207,13 +148,4 @@ open build/my_model/test_coverage/index.html
 ## How to generate project documentation
 ``` bash
 ./do-docs.bash
-```
-
-## How to use GitHub CI to upload coverage report to Codecov
-
-There is already a `.github/workflows/run-unit-test-and-upload-codecov.yml` file provided.  But we still need to create a codecov account.
-
-Follow the similar instruction provided in the cpp-boilerplate-v2 repo:
-
-  https://github.com/TommyChangUMD/cpp-boilerplate-v2?tab=readme-ov-file#how-to-use-github-ci-to-upload-coverage-report-to-codecov
-  
+``` 
