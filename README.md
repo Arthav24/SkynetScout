@@ -42,17 +42,19 @@ sudo apt-get install python3-colcon-clean # this for easy command to clean works
 
 ## UML Diagram - Initial
 Class dependency diagram of the proposed design
-![image](https://github.com/Sounderya22/Human_Tracker_Team7/blob/main/UML/Phase0/activity_diagram.jpeg)
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/UML_initial.svg)
 
 ## Sequence Diagram - Initial
 ![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/SequenceDiagram.png)
 
 ## Activity Diagram
-![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/SequenceDiagram.png)
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/Activity.svg)
 
 ## Dependency Graph
 ![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/screenshots/depGraph.png)
 
+## ROS module communication - Initial 
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/ROS_comm.svg)
 ## Backlog
 Product backlog sheet can be found [here](https://umd0-my.sharepoint.com/:x:/g/personal/aniswa_umd_edu/EYVlvxucsS9AoDJi-Hb2Vg8Bc-rh3_DI1Xda5q9So6VFAA?e=bYEpLH&nav=MTVfezMxNTExODU5LUVGMTYtNDQ1OC05QjM0LTIzMzYxNzA3NkQ1NX0)
 
