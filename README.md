@@ -55,6 +55,7 @@ Class dependency diagram of the proposed design
 
 ## ROS module communication - Initial 
 ![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/ROS_comm.svg)
+
 ## Backlog
 Product backlog sheet can be found [here](https://umd0-my.sharepoint.com/:x:/g/personal/aniswa_umd_edu/EYVlvxucsS9AoDJi-Hb2Vg8Bc-rh3_DI1Xda5q9So6VFAA?e=bYEpLH&nav=MTVfezMxNTExODU5LUVGMTYtNDQ1OC05QjM0LTIzMzYxNzA3NkQ1NX0)
 
