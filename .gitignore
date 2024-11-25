@@ -20,3 +20,7 @@ submission*/
 config-clang*
 gitTest/
 .cache/
+.vscode/
+install/
+log/
+compile_commands.json
