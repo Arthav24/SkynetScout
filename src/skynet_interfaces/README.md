@@ -12,8 +12,8 @@ This package contains all the custom interfaces used in project. Interfaces are 
 │   └── skynet_interfaces
 ├── LICENSE
 ├── msg
-│   ├── Anamolies.msg
-│   └── AnamolyStatus.msg
+│   ├── Anomalies.msg
+│   └── AnomalyStatus.msg
 ├── package.xml
 ├── README.md
 ├── src
@@ -26,14 +26,14 @@ This package contains all the custom interfaces used in project. Interfaces are 
 
 ## Structure details
 
-### Anamolies.msg
+### Anomalies.msg
 This message is aggregation of all the anomalies found in the sample frame.
 ```bash
 std_msgs/Header header
-AnamolyStatus[] anamolies
+AnomalyStatus[] anomalies
 ```
 
-### AnamolyStatus.msg
+### AnomalyStatus.msg
 This message is published by individual anomaly detection libraries.
 ```bash
 byte OK=0
