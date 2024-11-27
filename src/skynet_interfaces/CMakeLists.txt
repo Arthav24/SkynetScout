@@ -15,11 +15,11 @@ find_package(rosidl_default_generators REQUIRED)
 
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-        "msg/Anamolies.msg"
-        "msg/AnamolyStatus.msg"
+        "msg/AnomalyStatus.msg"
+        "msg/Anomalies.msg"
         "srv/StartInspection.srv"
         "srv/ReturnToHome.srv"
-        DEPENDENCIES geometry_msgs
+        DEPENDENCIES geometry_msgs std_msgs
 )
 
 if(BUILD_TESTING)
