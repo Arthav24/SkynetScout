@@ -56,6 +56,7 @@ TEST_CASE_METHOD (ADTestFixture, "Check for 2D Lidar scan", "[integration][Anamo
       "/scan",
       10,
       [&message_received, this](const sensor_msgs::msg::LaserScan::SharedPtr msg) {
+        (void)msg;
 //        received_message = msg;
         message_received = true;
         RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a LaserScan");
@@ -91,6 +92,7 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera RGB image", "[integratio
       "/oakd/rgb/preview/image_raw",
       10,
       [&message_received, this](const sensor_msgs::msg::Image::SharedPtr msg) {
+        (void)msg;
         message_received = true;
         RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a RGB Image");
       });
@@ -125,6 +127,7 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][An
       "/oakd/rgb/preview/camera_info",
       10,
       [&message_received, this](const sensor_msgs::msg::CameraInfo::SharedPtr msg) {
+        (void)msg;
         message_received = true;
         RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a Camera Info");
       });
@@ -160,6 +163,7 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD Depth pointcloud", "[integratio
       "/oakd/rgb/preview/depth/points",
       10,
       [&message_received, this](const sensor_msgs::msg::PointCloud2::SharedPtr msg) {
+        (void)msg;
         message_received = true;
         RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a depth point cloud");
       });
