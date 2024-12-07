@@ -1,0 +1,14 @@
+material crack_sim/diffuse
+{
+    receive_shadows off
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture crack.png
+            }
+        }
+    }
+}
