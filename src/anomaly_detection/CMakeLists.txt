@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(anamoly_detection)
+project(anomaly_detection)
 
 set(CMAKE_CXX_STANDARD 17)
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -15,12 +15,15 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(skynet_interfaces REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(catch_ros2 REQUIRED)
 find_package(Doxygen REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(cv_bridge REQUIRED)
+find_package(image_transport REQUIRED)
+
 
 ############################################
 # Set up level 2 unit test (i.e, integration test)
@@ -57,7 +60,7 @@ if (BUILD_TESTING)
             ${OpenCV_INCLUDE_DIRS}
     )
     ament_target_dependencies(anomalyDetectionTest
-            rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV
+            rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV cv_bridge
     )
     install(TARGETS
             anomalyDetectionTest
@@ -87,7 +90,7 @@ if (BUILD_TESTING)
             ${OpenCV_INCLUDE_DIRS}
     )
     ament_target_dependencies(anamoly_detection_unitTests
-            rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV
+            rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV cv_bridge
     )
     target_link_libraries(anamoly_detection_unitTests
             catch_ros2::catch_ros2_with_main
@@ -146,9 +149,9 @@ doxygen_add_docs(docs           # target name
         ${PROJECT_SOURCE_DIR}/test
 )
 
-#include_directories(
-#        include
-#)
+include_directories(
+
+)
 
 ###################################
 # Misaligned Beams detection
@@ -157,10 +160,12 @@ add_library(BeamsDetect src/DetectMisAlignedBeams.cc)
 
 # Add executable dependencies:
 target_include_directories(BeamsDetect PUBLIC
-        include/
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+        ${skynet_interfaces_INCLUDE_DIRS}
         ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(BeamsDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros )
+ament_target_dependencies(BeamsDetect rclcpp skynet_interfaces sensor_msgs geometry_msgs tf2 tf2_ros )
 
 ###################################
 # Crack detection
@@ -169,10 +174,12 @@ add_library(cracksDetect src/DetectCrack.cc)
 
 # Add executable dependencies:
 target_include_directories(cracksDetect PUBLIC
-        include/
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+        ${skynet_interfaces_INCLUDE_DIRS}
         ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(cracksDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros)
+ament_target_dependencies(cracksDetect rclcpp skynet_interfaces sensor_msgs geometry_msgs tf2 tf2_ros)
 
 ###################################
 # Object detection
@@ -181,25 +188,43 @@ add_library(objectDetect src/DetectHazardObject.cc)
 
 # Add executable dependencies:
 target_include_directories(objectDetect PUBLIC
-        include/
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+        ${skynet_interfaces_INCLUDE_DIRS}
         ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(objectDetect rclcpp sensor_msgs geometry_msgs tf2 tf2_ros )
-
+ament_target_dependencies(objectDetect rclcpp skynet_interfaces sensor_msgs geometry_msgs tf2 tf2_ros )
 
 ###################################
-# Main anomaly detection
+# Main Library
 ###################################
 add_library(anomalyDetection src/AnomalyDetection.cc)
 
-# Add executable dependencies:
 target_include_directories(anomalyDetection PUBLIC
-        include/
+        ${skynet_interfaces_INCLUDE_DIRS}
         ${OpenCV_INCLUDE_DIRS}
+        "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
+        "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
 )
-ament_target_dependencies(anomalyDetection rclcpp sensor_msgs geometry_msgs tf2 tf2_ros  )
+ament_target_dependencies(anomalyDetection rclcpp skynet_interfaces sensor_msgs geometry_msgs tf2 tf2_ros cv_bridge image_transport)
 
-target_link_libraries(anomalyDetection BeamsDetect cracksDetect objectDetect ${OpenCV_LIBS})
+target_link_libraries(anomalyDetection BeamsDetect cracksDetect objectDetect ${OpenCV_LIBS} ${skynet_interfaces_TARGETS})
+
+
+###################################
+# Executable
+###################################
+add_executable(anomaly_detection_node src/anomaly_detection_node.cc)
+
+target_include_directories(anomaly_detection_node PUBLIC
+        ${skynet_interfaces_INCLUDE_DIRS}
+        ${OpenCV_INCLUDE_DIRS}
+        "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
+        "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+)
+ament_target_dependencies(anomaly_detection_node rclcpp skynet_interfaces sensor_msgs geometry_msgs tf2 tf2_ros)
+
+target_link_libraries(anomaly_detection_node anomalyDetection)
 
 ###################################
 # Installation
@@ -207,7 +232,7 @@ target_link_libraries(anomalyDetection BeamsDetect cracksDetect objectDetect ${O
 
 # Install executables:
 install(TARGETS
-        anomalyDetection
+        anomaly_detection_node
         DESTINATION lib/${PROJECT_NAME})
 
 # install launch files
@@ -215,10 +240,4 @@ install(DIRECTORY
         launch
         DESTINATION share/${PROJECT_NAME}
 )
-
-## Install some arbitrary executables
-#install(PROGRAMS      # want to make the file executable (ie. chmod a+x)
-##        <>
-#        DESTINATION lib/${PROJECT_NAME})
-
 ament_package()

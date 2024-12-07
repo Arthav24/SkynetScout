@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2024
  */
 
-#ifndef ANAMOLY_BEAMS_DETECTION_H_
-#define ANAMOLY_BEAMS_DETECTION_H_
+#ifndef ANOMALY_BEAMS_DETECTION_H_
+#define ANOMALY_BEAMS_DETECTION_H_
 
 #include <chrono>
 #include <functional>
@@ -20,6 +20,8 @@
 #include <opencv4/opencv2/opencv.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
+#include <skynet_interfaces/msg/anomaly_status.hpp>
+#include "AnomalyBase.h"
 
 namespace scout {
 
@@ -27,22 +29,18 @@ namespace scout {
  * @class MisalignedBeams
  * @brief Misaligned beams class
  */
-class MisalignedBeams {
+class MisalignedBeams: public AnomalyBase {
  public:
   /*constructor*/
   MisalignedBeams();
 
   /*destructor*/
   ~MisalignedBeams();
-  void processImage(cv::Mat);
+  skynet_interfaces::msg::AnomalyStatus processImage(cv::Mat) override;
  private:
-  /*image subscriber member*/
-  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr mImageSubs;
-
-  /*camera info subscriber member */
-  rclcpp::Subscription<sensor_msgs::msg::CameraInfo>::SharedPtr mCamInfoSubs;
-
+  cv::Mat gray;
+  skynet_interfaces::msg::AnomalyStatus status;
 };
 
 } // namespace end
-#endif  // ANAMOLY_BEAMS_DETECTION_H_
+#endif  // ANOMALY_BEAMS_DETECTION_H_

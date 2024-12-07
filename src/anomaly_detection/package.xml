@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>anamoly_detection</name>
+  <name>anomaly_detection</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="swarankar.ani24@gmail.com">arthavnuc</maintainer>
@@ -17,6 +17,8 @@
   <depend>tf2_ros</depend>
   <depend>geometry_msgs</depend>
   <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+  <depend>skynet_interfaces</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

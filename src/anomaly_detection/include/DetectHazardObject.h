@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2024
  */
 
-#ifndef ANAMOLY_OBJECT_DETECTION_H_
-#define ANAMOLY_OBJECT_DETECTION_H_
+#ifndef ANOMALY_OBJECT_DETECTION_H_
+#define ANOMALY_OBJECT_DETECTION_H_
 
 #include <chrono>
 #include <functional>
@@ -20,14 +20,16 @@
 #include <opencv4/opencv2/opencv.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
+#include <skynet_interfaces/msg/anomaly_status.hpp>
+#include "AnomalyBase.h"
 
 namespace scout {
 
 /**
  * @class DetectionPipeline
- * @brief Anomlay Detection class that runs the detection pipeline
+ * @brief Anomaly Detection class that runs the detection pipeline
  */
-class DetectHazardObject {
+class DetectHazardObject : public AnomalyBase {
  public:
  /*constructor*/
   DetectHazardObject();
@@ -36,15 +38,12 @@ class DetectHazardObject {
   ~DetectHazardObject();
   
   /*frame capture process*/
-  void processImage(cv::Mat);
+  skynet_interfaces::msg::AnomalyStatus processImage(cv::Mat) override;
 
  private:
-  /*image subscriber member*/
-  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr mImageSubs ;
-
-  /*camera info subscriber member */
-  rclcpp::Subscription<sensor_msgs::msg::CameraInfo >::SharedPtr mCamInfoSubs;
+   cv::Mat gray;
+   skynet_interfaces::msg::AnomalyStatus status;
 };
 
 } // namespace end
-#endif  // ANAMOLY_OBJECT_DETECTION_H_
+#endif  // ANOMALY_OBJECT_DETECTION_H_
