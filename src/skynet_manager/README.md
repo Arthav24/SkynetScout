@@ -8,3 +8,13 @@ Key functionalities include:
 - Third-Party Communication: Facilitates integration with external systems (e.g., construction management software, cloud platforms) for data sharing, reporting, and remote control.
 
 The package leverages ROS2 services, actions, and topics to handle task execution and ensures modular, scalable communication between system components and external entities.
+
+```bash
+# run in ws root
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:${PWD}/install/skynet_manager/share/skynet_manager/models/
+export TURTLEBOT3_MODEL=waffle
+source /usr/share/gazebo/setup.bash 
+source /usr/share/gazebo-11/setup.bash
+
+ 
+```
