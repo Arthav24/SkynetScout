@@ -42,10 +42,10 @@ sudo apt-get install python3-colcon-clean # this for easy command to clean works
 
 ## UML Diagram - Initial
 Class dependency diagram of the proposed design
-![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/UML_initial.svg)
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/revised/UML_revised.svg)
 
 ## Sequence Diagram - Initial
-![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/SequenceDiagram.png)
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/revised/SequenceDiagram.png)
 
 ## Activity Diagram
 ![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/Activity.svg)
