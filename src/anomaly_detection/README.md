@@ -14,24 +14,32 @@ The package integrates seamlessly with navigation and perception stacks in ROS2 
 
 ```bash
 ├── CMakeLists.txt
-├── compile_commands.json -> ../../build/anamoly_detection/compile_commands.json
+├── compile_commands.json -> ../../build/anomaly_detection/compile_commands.json
 ├── include
+│   ├── AnomalyBase.h
 │   ├── AnomalyDetection.h
 │   ├── DetectCrack.h
 │   ├── DetectHazardObject.h
 │   └── DetectMisAlignedBeams.h
 ├── launch
+│   ├── anomaly_detection.launch.py
 │   └── integration_test.launch.yaml
 ├── LICENSE
 ├── package.xml
 ├── README.md
+├── scripts
+│   └── generate_coverage_report.bash
 ├── src
 │   ├── AnomalyDetection.cc
+│   ├── anomaly_detection_node.cc
 │   ├── DetectCrack.cc
 │   ├── DetectHazardObject.cc
 │   └── DetectMisAlignedBeams.cc
 └── test
-    ├── anamoly_detection_integration_test.cc
-    └── anamoly_detection_unit_test.cc
-
+    ├── anomaly_detection_integration_test.cc
+    ├── anomaly_detection_unit_test.cc
+    └── test_images
+        ├── cracks.png
+        ├── misaligned.png
+        └── noCrack.png
 ```
