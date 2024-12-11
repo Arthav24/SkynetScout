@@ -8,9 +8,11 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-
-
+from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
 def generate_launch_description():
+    headless = DeclareLaunchArgument('gui', default_value='true',
+                          description='Set to "false" to run headless.')
     launch_file_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
@@ -54,12 +56,23 @@ def generate_launch_description():
         }.items()
     )
 
-    ld = LaunchDescription()
+    # ld = LaunchDescription()
+    # ld.add_action(headless)
+    # # Add the commands to the launch description
+    # ld.add_action(gzserver_cmd)
+    # ld.add_action(gzclient_cmd)
+    # ld.add_action(robot_state_publisher_cmd)
+    # ld.add_action(spawn_turtlebot_cmd)
 
-    # Add the commands to the launch description
-    ld.add_action(gzserver_cmd)
-    ld.add_action(gzclient_cmd)
-    ld.add_action(robot_state_publisher_cmd)
-    ld.add_action(spawn_turtlebot_cmd)
-
-    return ld
+    return LaunchDescription([
+        headless,
+        gzserver_cmd,
+        robot_state_publisher_cmd,
+        spawn_turtlebot_cmd,
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
+            ),
+            condition=IfCondition(LaunchConfiguration('gui'))
+        )
+    ])

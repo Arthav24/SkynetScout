@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.8)
 project(anomaly_detection)
-
+##This package allows us to write config files that can be relocated, paths are not hard-coded.
+#include(CMakePackageConfigHelpers)
 set(CMAKE_CXX_STANDARD 17)
-if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
-endif ()
+endif()
 
 ###################################
 # find dependencies
@@ -33,15 +34,16 @@ find_package(image_transport REQUIRED)
 #  set(CMAKE_CXX_FLAGS "--coverage")
 #  set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE "ON")
 #endif()
-if (BUILD_TESTING)
+if(BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)
     # the following line skips the linter which checks for copyrights
     # comment the line when a copyright and license is added to all source files
-    set(ament_cmake_copyright_FOUND FALSE)
+#    set(ament_cmake_copyright_FOUND TRUE)
     # the following line skips cpplint (only works in a git repo)
     # comment the line when this package is in a git repo and when
     # a copyright and license is added to all source files
-    set(ament_cmake_cpplint_FOUND FALSE)
+    set(ament_cmake_cpplint_FOUND TRUE)
+    set(ament_cmake_uncrustify_FOUND TRUE)
     ament_lint_auto_find_test_dependencies()
     #   build the integration test
     ###########################################################################
@@ -106,7 +108,7 @@ if (BUILD_TESTING)
     )
 
     file(COPY test/test_images DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-endif ()
+endif()
 
 ###################################################
 # Create the compilation database for clangd and move it out of the build dir.
@@ -119,7 +121,7 @@ execute_process(COMMAND "ln" "-s" "-r" "${CMAKE_BINARY_DIR}/compile_commands.jso
 # Doxygen Rules
 # ref: https://cmake.org/cmake/help/latest/module/FindDoxygen.html
 ###################################################
-if (DOXYGEN_FOUND)
+if(DOXYGEN_FOUND)
     set(DOXYGEN_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)
     set(DOXYGEN_COLLABORATION_GRAPH YES)
     set(DOXYGEN_EXTRACT_ALL YES)
@@ -141,9 +143,9 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_DOT_GRAPH_MAX_NODES 100)
     set(DOXYGEN_MAX_DOT_GRAPH_DEPTH 0)
     set(DOXYGEN_DOT_TRANSPARENT YES)
-else ()
+else()
     message(FATAL_ERROR "Doxygen needs to be installed to generate the doxygen documentation")
-endif ()
+endif()
 
 ###################################
 # Specify Targets
@@ -172,7 +174,7 @@ target_include_directories(BeamsDetect PUBLIC
         ${skynet_interfaces_INCLUDE_DIRS}
         ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(BeamsDetect rclcpp skynet_interfaces sensor_msgs geometry_msgs tf2 tf2_ros )
+ament_target_dependencies(BeamsDetect rclcpp skynet_interfaces sensor_msgs geometry_msgs tf2 tf2_ros)
 
 ###################################
 # Crack detection
@@ -200,7 +202,7 @@ target_include_directories(objectDetect PUBLIC
         ${skynet_interfaces_INCLUDE_DIRS}
         ${OpenCV_INCLUDE_DIRS}
 )
-ament_target_dependencies(objectDetect rclcpp skynet_interfaces sensor_msgs geometry_msgs tf2 tf2_ros )
+ament_target_dependencies(objectDetect rclcpp skynet_interfaces sensor_msgs geometry_msgs tf2 tf2_ros)
 
 ###################################
 # Main Library
@@ -247,4 +249,7 @@ install(DIRECTORY
         launch
         DESTINATION share/${PROJECT_NAME}
 )
+install(PROGRAMS      # want to make the file executable (ie. chmod a+x)
+        scripts/generate_coverage_report.bash
+        DESTINATION lib/${PROJECT_NAME})
 ament_package()

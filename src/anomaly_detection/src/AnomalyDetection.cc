@@ -1,3 +1,17 @@
+// Copyright 2024 SkynetScout
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 /**
  * @brief This source file includes definition Anomaly detection
  * @file AnomalyDetection.cc
@@ -11,6 +25,20 @@
 
 /*anamoly_detector node*/
 scout::AnomalyDetection::AnomalyDetection() : Node("anamoly_detector") {
+
+  this->declare_parameter<bool>("enableCrackDetection", true);
+  this->declare_parameter<bool>("enableBeamDetection", true);
+  this->declare_parameter<bool>("enableObjectDetection", true);
+
+  RUN_CRACK = this->get_parameter("enableCrackDetection")
+                  .get_parameter_value()
+                  .get<bool>();
+  RUN_BEAM = this->get_parameter("enableBeamDetection")
+                 .get_parameter_value()
+                 .get<bool>();
+  RUN_OBJECT = this->get_parameter("enableObjectDetection")
+                   .get_parameter_value()
+                   .get<bool>();
   setup();
   mDetectObject = std::make_shared<scout::DetectHazardObject>();
   mDetectBeams = std::make_shared<scout::MisalignedBeams>();
@@ -45,18 +73,24 @@ bool scout::AnomalyDetection::run() {
         if (image.channels() != 3) {
           cv::cvtColor(image, image, cv::COLOR_GRAY2BGR);
         }
+        //        TODO can be simplified with template declaration
+        if (RUN_CRACK) {
+          crackDetectFut =
+              std::async(std::launch::async, &DetectCrack::processImage,
+                         mDetectCracks, image);
+        }
 
-        crackDetectFut =
-            std::async(std::launch::async, &DetectCrack::processImage,
-                       mDetectCracks, image);
+        if (RUN_BEAM) {
+          beamDetectFut =
+              std::async(std::launch::async, &MisalignedBeams::processImage,
+                         mDetectBeams, image);
+        }
 
-        beamDetectFut =
-            std::async(std::launch::async, &MisalignedBeams::processImage,
-                       mDetectBeams, image);
-
-        objectDetectFut =
-            std::async(std::launch::async, &DetectHazardObject::processImage,
-                       mDetectObject, image);
+        if (RUN_OBJECT) {
+          objectDetectFut =
+              std::async(std::launch::async, &DetectHazardObject::processImage,
+                         mDetectObject, image);
+        }
 
         auto beam_ = beamDetectFut.get();
         if (beam_.level != skynet_interfaces::msg::AnomalyStatus::OK) {
