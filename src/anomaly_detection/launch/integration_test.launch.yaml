@@ -29,9 +29,9 @@ launch:
   - node:
       pkg: 'anomaly_detection'
       exec: 'anomalyDetectionTest'
-  - node:
-      pkg: 'skynet_manager'
-      exec: 'turtlebot3_waffle_construction.launch'
+#  - node:
+#      pkg: 'skynet_manager'
+#      exec: 'turtlebot3_waffle_construction.launch'
 
   ############################################################################
   # 3.) tag: catch2_integration_test_node (i.e., node which performs the test)

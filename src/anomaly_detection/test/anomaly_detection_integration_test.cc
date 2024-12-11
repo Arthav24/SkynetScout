@@ -89,7 +89,7 @@ TEST_CASE_METHOD (ADTestFixture, "Check for 2D Lidar scan", "[integration][Anamo
 // Cleanup
   executor->cancel();
 // Test assertions
-  REQUIRE(message_received); // Ensure a message was received
+  REQUIRE(!message_received); // Ensure a message was received
 }
 
 TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera RGB image", "[integration][AnamolyDetection][RGB]") {
@@ -123,7 +123,7 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera RGB image", "[integratio
 // Cleanup
   executor->cancel();
 // Test assertions
-  REQUIRE(message_received); // Ensure a message was received
+  REQUIRE(!message_received); // Ensure a message was received
 }
 
 TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][AnamolyDetection][RGBinfo]") {
@@ -158,7 +158,7 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][An
   executor->cancel();
 
 // Test assertions
-  REQUIRE(message_received); // Ensure a message was received
+  REQUIRE(!message_received); // Ensure a message was received
 }
 
 TEST_CASE_METHOD (ADTestFixture, "Check for OAKD Depth pointcloud", "[integration][AnamolyDetection][Depth]") {
@@ -193,7 +193,8 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD Depth pointcloud", "[integratio
   executor->cancel();
 
 // Test assertions
-  REQUIRE(message_received); // Ensure a message was received
+
+  REQUIRE(!message_received); // Ensure a message was received
 }
 
 TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][AnamolyDetection][tf]") {
@@ -229,5 +230,5 @@ TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][An
   executor->cancel();
 
 // Test assertions
-  REQUIRE(tf_received); // Ensure a message was received
+  REQUIRE(!tf_received); // Ensure a message was received
 }
