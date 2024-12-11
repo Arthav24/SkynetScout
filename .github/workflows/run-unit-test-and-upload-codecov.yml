@@ -66,11 +66,10 @@ jobs:
           source /opt/ros/humble/setup.bash
           sudo apt install -y ros-${ROS_DISTRO}-catch-ros2
           
-      # Run all unit test, integration test, and generate combined coverage report
+      # Run all unit test, integration test, and generate combined coverage report#          ./do-docs.bash
       - name: Build, run unit test, and generate coverage report
         run: |
           ./do-tests-and-coverage.bash
-#          ./do-docs.bash
           cat build/test_coverage_merged.info
 
       # Upload coverage result to CodeCov
