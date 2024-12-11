@@ -25,13 +25,12 @@ launch:
 
   - catch2_launch_file:
       description: 'Launch file for running L2 tests of Skynet Scout manager module'
-
-  - node:
-      pkg: 'anomaly_detection'
-      exec: 'anomalyDetectionTest'
   - node:
       pkg: 'anomaly_detection'
       exec: 'anomaly_detection_node'
+  - node:
+      pkg: 'anomaly_detection'
+      exec: 'anomalyDetectionTest'
 
   ############################################################################
   # 3.) tag: catch2_integration_test_node (i.e., node which performs the test)
