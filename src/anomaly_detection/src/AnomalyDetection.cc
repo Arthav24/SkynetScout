@@ -97,7 +97,7 @@ void scout::AnomalyDetection::setup() {
   RCLCPP_INFO(this->get_logger(), "Subscribed to '%s'",
               imgSubscriber_->get_topic_name());
   camInfoSubscriber_ = this->create_subscription<sensor_msgs::msg::CameraInfo>(
-      "/scan1", 10,
+      "/image/info", 10,
       std::bind(&AnomalyDetection::CaminfoCallback, this,
                 std::placeholders::_1));
   RCLCPP_INFO(this->get_logger(), "Subscribed to '%s'",

@@ -27,8 +27,8 @@ launch:
       description: 'Launch file for running L2 tests of Skynet Scout manager module'
 
   - node:
-      pkg: 'anamoly_detection'
-      exec: 'AnamolyDetectionTest'
+      pkg: 'anomaly_detection'
+      exec: 'anomalyDetectionTest'
 #  - node:
 #      pkg: 'beginner_tutorials'
 #      exec: 'talker'
@@ -42,5 +42,5 @@ launch:
   #   parameters and other arguments can also be passed, like the
   #   "test_duration" example below.
   - catch2_integration_test_node:
-      pkg: 'anamoly_detection'
-      exec: 'AnamolyDetectionTest'
+      pkg: 'anomaly_detection'
+      exec: 'anomalyDetectionTest'

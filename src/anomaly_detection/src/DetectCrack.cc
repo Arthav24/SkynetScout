@@ -55,6 +55,6 @@ scout::DetectCrack::processImage(cv::Mat image) {
   }
 //  TODO fill status object
 
-
+  status.message = "Found cracks";
   return status;
 }

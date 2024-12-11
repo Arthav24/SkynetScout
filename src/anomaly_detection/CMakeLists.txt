@@ -37,11 +37,11 @@ if (BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)
     # the following line skips the linter which checks for copyrights
     # comment the line when a copyright and license is added to all source files
-    set(ament_cmake_copyright_FOUND TRUE)
+    set(ament_cmake_copyright_FOUND FALSE)
     # the following line skips cpplint (only works in a git repo)
     # comment the line when this package is in a git repo and when
     # a copyright and license is added to all source files
-    set(ament_cmake_cpplint_FOUND TRUE)
+    set(ament_cmake_cpplint_FOUND FALSE)
     ament_lint_auto_find_test_dependencies()
     #   build the integration test
     ###########################################################################
@@ -49,7 +49,7 @@ if (BUILD_TESTING)
     ###########################################################################
     # This is the node in which integration tests occur
     add_executable(anomalyDetectionTest
-            test/anamoly_detection_integration_test.cc
+            test/anomaly_detection_integration_test.cc
     )
     # The link libraries call this node with "catch_ros2::catch_ros2_with_node_main"
     # to get the default integration test node main function
@@ -62,17 +62,13 @@ if (BUILD_TESTING)
     ament_target_dependencies(anomalyDetectionTest
             rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV cv_bridge
     )
-    install(TARGETS
-            anomalyDetectionTest
-            DESTINATION lib/${PROJECT_NAME}
-    )
 
     ######################################
     ## 2.) ADD INTEGRATION TEST SUPPORT ##
     ######################################
     # This CMake function allows the integration test to be run
     # when running "colcon test".
-    catch_ros2_add_integration_test(anomalyDetection_Test
+    catch_ros2_add_integration_test(anomalyDetectionTest
             LAUNCH_FILE integration_test.launch.yaml
     )
     include(CTest)
@@ -80,25 +76,36 @@ if (BUILD_TESTING)
     ###############
     ## UNIT TEST ##
     ###############
-    add_executable(anamoly_detection_unitTests
-            test/anamoly_detection_unit_test.cc
+    add_executable(anomaly_detection_unitTests
+            test/anomaly_detection_unit_test.cc
     )
     # Linking a unit test executable with catch_ros2::catch_ros2_with_main
     # provides the default Catch2 main function to the executable.
-    target_include_directories(anamoly_detection_unitTests PUBLIC
+    target_include_directories(anomaly_detection_unitTests PUBLIC
             include
             ${OpenCV_INCLUDE_DIRS}
     )
-    ament_target_dependencies(anamoly_detection_unitTests
+    ament_target_dependencies(anomaly_detection_unitTests
             rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV cv_bridge
     )
-    target_link_libraries(anamoly_detection_unitTests
+    target_link_libraries(anomaly_detection_unitTests
             catch_ros2::catch_ros2_with_main
             BeamsDetect cracksDetect objectDetect
             ${OpenCV_LIBS}
     )
 
-    add_test(NAME anomalyDetectionUnitTests COMMAND anamoly_detection_unitTests)
+    add_test(NAME anomalyDetectionUnitTests COMMAND anomaly_detection_unitTests)
+    install(TARGETS
+            anomaly_detection_unitTests
+            anomalyDetectionTest
+            DESTINATION lib/${PROJECT_NAME}
+    )
+    install(DIRECTORY
+            test/test_images
+            DESTINATION lib/${PROJECT_NAME}
+    )
+
+    file(COPY test/test_images DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif ()
 
 ###################################################

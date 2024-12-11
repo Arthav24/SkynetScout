@@ -103,9 +103,16 @@ TEST_CASE("Crack Detection", "[crack Detection]") {
   CHECK(node->get_parameter("enableObjectDetection").get_parameter_value().get<bool>() == true);
 
   //Read Image and Pass to processImage
-  cv::Mat img;
-  mcrackDetection->processImage(img);
+  cv::Mat input = cv::imread("./test_images/cracks.png");
+  if (input.empty()) {
+    std::cerr << "Error: Unable to load image!" << std::endl;
+  }
 
+  if (input.channels() != 3) {
+    cv::cvtColor(input, input, cv::COLOR_GRAY2BGR);
+  }
+  auto ret = mcrackDetection->processImage(input);
+  REQUIRE(ret.message == "Found cracks");
 // Shutdown ROS
   rclcpp::shutdown();
 }
@@ -135,10 +142,17 @@ TEST_CASE("Misaligned Beams Detection", "[MBeams Detection]") {
   CHECK(node->get_parameter("enableBeamDetection").get_parameter_value().get<bool>() == true);
   CHECK(node->get_parameter("enableObjectDetection").get_parameter_value().get<bool>() == false);
 
-  //Read Image and Pass to processImage
-  cv::Mat img;
-  mBeamsDetection->processImage(img);
+  cv::Mat input = cv::imread("./test_images/misaligned.png");
+  if (input.empty()) {
+    std::cerr << "Error: Unable to load image!" << std::endl;
+  }
 
+  if (input.channels() != 3) {
+    cv::cvtColor(input, input, cv::COLOR_GRAY2BGR);
+  }
+
+  auto ret = mBeamsDetection->processImage(input);
+  REQUIRE(ret.message == "Found misaligned beams");
 // Shutdown ROS
   rclcpp::shutdown();
 }
