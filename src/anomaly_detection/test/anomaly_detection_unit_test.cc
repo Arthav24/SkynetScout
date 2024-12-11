@@ -17,9 +17,8 @@
  * @brief This file contains all the unit test for anamoly detection module
  */
 
-/// @file - Example unit tests using catch_ros2 utilities.
 
-#include "catch_ros2/catch_ros2.hpp"
+#include <catch_ros2/catch_ros2.hpp>
 #include "rclcpp/rclcpp.hpp"
 #include <opencv4/opencv2/opencv.hpp>
 #include "DetectCrack.h"
@@ -35,21 +34,21 @@ TEST_CASE("Hazardous Object Detection", "[Object Detection]") {
       "-p enableBeamDetection:=false -p enableObjectDetection:=true"
   }; // checking only Object Detection
 
-// Initialize ROS with simulated arguments
+  // Initialize ROS with simulated arguments
   rclcpp::init(args.argc(), args.argv());
 
   auto mObjectDetection = std::make_unique<scout::DetectHazardObject>();
 
-// Init test node
+  // Init test node
   auto node = rclcpp::Node::make_shared("Anamoly_Detection_unittest_node");
 
-// Test that parameters are received as expected by the node
+  // Test that parameters are received as expected by the node
   node->declare_parameter<bool>("enableCrackDetection");
   node->declare_parameter<bool>("enableBeamDetection");
   node->declare_parameter<bool>("enableObjectDetection", true);
 
 
-// Assertions
+  // Assertions
   CHECK(node->get_parameter("enableCrackDetection").get_parameter_value().get<bool>() == false);
   CHECK(node->get_parameter("enableBeamDetection").get_parameter_value().get<bool>() == false);
   CHECK(node->get_parameter("enableObjectDetection").get_parameter_value().get<bool>() == true);
@@ -65,7 +64,7 @@ TEST_CASE("Hazardous Object Detection", "[Object Detection]") {
   }
   auto ret = mObjectDetection->processImage(input);;
   REQUIRE(ret.message == "");
-// Shutdown ROS
+  // Shutdown ROS
   rclcpp::shutdown();
 }
 
@@ -75,21 +74,21 @@ TEST_CASE("Crack Detection", "[crack Detection]") {
       "-p enableBeamDetection:=false -p enableObjectDetection:=false"
   }; // checking only Object Detection
 
-// Initialize ROS with simulated arguments
+  // Initialize ROS with simulated arguments
   rclcpp::init(args.argc(), args.argv());
 
   auto mcrackDetection = std::make_unique<scout::DetectCrack>();
 
-// Init test node
+  // Init test node
   auto node = rclcpp::Node::make_shared("Anamoly_Detection_unittest_node");
 
-// Test that parameters are received as expected by the node
+  // Test that parameters are received as expected by the node
   node->declare_parameter<bool>("enableCrackDetection");
   node->declare_parameter<bool>("enableBeamDetection");
   node->declare_parameter<bool>("enableObjectDetection", true);
 
 
-// Assertions
+  // Assertions
   CHECK(node->get_parameter("enableCrackDetection").get_parameter_value().get<bool>() == true);
   CHECK(node->get_parameter("enableBeamDetection").get_parameter_value().get<bool>() == false);
   CHECK(node->get_parameter("enableObjectDetection").get_parameter_value().get<bool>() == false);
@@ -105,7 +104,7 @@ TEST_CASE("Crack Detection", "[crack Detection]") {
   }
   auto ret = mcrackDetection->processImage(input);
   REQUIRE(ret.message == "Found cracks");
-// Shutdown ROS
+  // Shutdown ROS
   rclcpp::shutdown();
 }
 
@@ -115,21 +114,21 @@ TEST_CASE("Misaligned Beams Detection", "[MBeams Detection]") {
       "-p enableBeamDetection:=true -p enableObjectDetection:=false"
   }; // checking only Object Detection
 
-// Initialize ROS with simulated arguments
+  // Initialize ROS with simulated arguments
   rclcpp::init(args.argc(), args.argv());
 
   auto mBeamsDetection = std::make_unique<scout::MisalignedBeams>();
 
-// Init test node
+  // Init test node
   auto node = rclcpp::Node::make_shared("Anamoly_Detection_unittest_node");
 
-// Test that parameters are received as expected by the node
+  // Test that parameters are received as expected by the node
   node->declare_parameter<bool>("enableCrackDetection");
   node->declare_parameter<bool>("enableBeamDetection");
   node->declare_parameter<bool>("enableObjectDetection", true);
 
 
-// Assertions
+  // Assertions
   CHECK(node->get_parameter("enableCrackDetection").get_parameter_value().get<bool>() == false);
   CHECK(node->get_parameter("enableBeamDetection").get_parameter_value().get<bool>() == true);
   CHECK(node->get_parameter("enableObjectDetection").get_parameter_value().get<bool>() == false);
@@ -145,6 +144,6 @@ TEST_CASE("Misaligned Beams Detection", "[MBeams Detection]") {
 
   auto ret = mBeamsDetection->processImage(input);
   REQUIRE(ret.message == "Found misaligned beams");
-// Shutdown ROS
+  // Shutdown ROS
   rclcpp::shutdown();
 }

@@ -79,4 +79,5 @@ scout::DetectCrack::processImage(cv::Mat image) {
     status.level = skynet_interfaces::msg::AnomalyStatus::OK;
     status.message = "";
   }
+  return status;
 }
