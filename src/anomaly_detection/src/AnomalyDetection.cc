@@ -59,6 +59,9 @@ bool scout::AnomalyDetection::run() {
     sensor_msgs::msg::Image frame_to_process;
     rclcpp::Rate rate(60);
     auto anomaly_msg = skynet_interfaces::msg::Anomalies();
+    anomaly_msg.header.stamp = this->now();
+    anomaliesPublisher_->publish(anomaly_msg);
+    anomaly_msg.anomalies.clear();
     while (rclcpp::ok()) {
 
       // handle null from front

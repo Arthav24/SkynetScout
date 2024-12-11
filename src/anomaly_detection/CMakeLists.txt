@@ -62,7 +62,7 @@ if(BUILD_TESTING)
             ${OpenCV_INCLUDE_DIRS}
     )
     ament_target_dependencies(anomalyDetectionTest
-            rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV cv_bridge
+            rclcpp std_srvs std_msgs sensor_msgs tf2 tf2_ros geometry_msgs OpenCV cv_bridge skynet_interfaces
     )
 
     ######################################

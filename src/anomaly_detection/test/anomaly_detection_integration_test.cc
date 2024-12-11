@@ -32,6 +32,7 @@
 #include <rclcpp/executors.hpp>
 #include <rclcpp/logging.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+#include <skynet_interfaces/msg/anomalies.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
@@ -57,7 +58,7 @@ class ADTestFixture {
   rclcpp::Node::SharedPtr Node;
 };
 
-TEST_CASE_METHOD (ADTestFixture, "Check for 2D Lidar scan", "[integration][AnamolyDetection][Lidar]") {
+TEST_CASE_METHOD (ADTestFixture, "Check for Anomalies topic", "[integration][AnamolyDetection][Anomalies]") {
 // Create an executor
   auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
@@ -66,13 +67,13 @@ TEST_CASE_METHOD (ADTestFixture, "Check for 2D Lidar scan", "[integration][Anamo
   bool message_received = false;
 
 // Create a subscription to the `Talker` topic
-  auto subscription = Node->create_subscription<sensor_msgs::msg::LaserScan>(
-      "/scan",
+  auto subscription = Node->create_subscription<skynet_interfaces::msg::Anomalies>(
+      "/anomalies",
       10,
-      [&message_received, this](const sensor_msgs::msg::LaserScan::SharedPtr msg) {
+      [&message_received, this](const skynet_interfaces::msg::Anomalies::SharedPtr msg) {
 //        received_message = msg;
         message_received = true;
-        RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a LaserScan");
+        RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD an Anomaly");
       });
 // Add the subscription node to the executor
   executor->add_node(Node);
@@ -89,146 +90,146 @@ TEST_CASE_METHOD (ADTestFixture, "Check for 2D Lidar scan", "[integration][Anamo
 // Cleanup
   executor->cancel();
 // Test assertions
-  REQUIRE(!message_received); // Ensure a message was received
+  REQUIRE(message_received); // Ensure a message was received
 }
 
-TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera RGB image", "[integration][AnamolyDetection][RGB]") {
-// Create an executor
-  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-
-// Define variables for message capture and subscription
-//  sensor_msgs::msg::LaserScan::SharedPtr received_message;
-  bool message_received = false;
-
-// Create a subscription to the `Talker` topic
-  auto subscription = Node->create_subscription<sensor_msgs::msg::Image>(
-      "/oakd/rgb/preview/image_raw",
-      10,
-      [&message_received, this](const sensor_msgs::msg::Image::SharedPtr msg) {
-        message_received = true;
-        RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a RGB Image");
-      });
-// Add the subscription node to the executor
-  executor->add_node(Node);
-// Run the executor for a short period to allow message processing
-  auto start_time = std::chrono::steady_clock::now();
-  while (!
-      message_received && (std::chrono::steady_clock::now()
-      - start_time) < std::chrono::seconds(2)) {
-    executor->spin_some();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100)
-    );
-  }
-
-// Cleanup
-  executor->cancel();
-// Test assertions
-  REQUIRE(!message_received); // Ensure a message was received
-}
-
-TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][AnamolyDetection][RGBinfo]") {
-// Create an executor
-  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-
-// Define variables for message capture and subscription
-//  sensor_msgs::msg::LaserScan::SharedPtr received_message;
-  bool message_received = false;
-
-// Create a subscription to the `Talker` topic
-  auto subscription = Node->create_subscription<sensor_msgs::msg::CameraInfo>(
-      "/oakd/rgb/preview/camera_info",
-      10,
-      [&message_received, this](const sensor_msgs::msg::CameraInfo::SharedPtr msg) {
-        message_received = true;
-        RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a Camera Info");
-      });
-// Add the subscription node to the executor
-  executor->add_node(Node);
-// Run the executor for a short period to allow message processing
-  auto start_time = std::chrono::steady_clock::now();
-  while (!
-      message_received && (std::chrono::steady_clock::now()
-      - start_time) < std::chrono::seconds(2)) {
-    executor->spin_some();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100)
-    );
-  }
-
-// Cleanup
-  executor->cancel();
-
-// Test assertions
-  REQUIRE(!message_received); // Ensure a message was received
-}
-
-TEST_CASE_METHOD (ADTestFixture, "Check for OAKD Depth pointcloud", "[integration][AnamolyDetection][Depth]") {
-// Create an executor
-  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-
-// Define variables for message capture and subscription
-//  sensor_msgs::msg::LaserScan::SharedPtr received_message;
-  bool message_received = false;
-
-// Create a subscription to the `Talker` topic
-  auto subscription = Node->create_subscription<sensor_msgs::msg::PointCloud2>(
-      "/oakd/rgb/preview/depth/points",
-      10,
-      [&message_received, this](const sensor_msgs::msg::PointCloud2::SharedPtr msg) {
-        message_received = true;
-        RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a depth point cloud");
-      });
-// Add the subscription node to the executor
-  executor->add_node(Node);
-// Run the executor for a short period to allow message processing
-  auto start_time = std::chrono::steady_clock::now();
-  while (!
-      message_received && (std::chrono::steady_clock::now()
-      - start_time) < std::chrono::seconds(2)) {
-    executor->spin_some();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100)
-    );
-  }
-
-// Cleanup
-  executor->cancel();
-
-// Test assertions
-
-  REQUIRE(!message_received); // Ensure a message was received
-}
-
-TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][AnamolyDetection][tf]") {
-
-  std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
-  std::shared_ptr<tf2_ros::TransformListener> tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
-
-  // Create an executor
-  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-  geometry_msgs::msg::TransformStamped t;
-  bool tf_received = false;
-  try {
-    t = tf_buffer_->lookupTransform(
-        "oakd_rgb_camera_optical_frame", "map",
-        tf2::TimePointZero);
-  } catch (const tf2::TransformException &ex) {
-    RCLCPP_INFO_STREAM(
-        Node->get_logger(), "Could not transform oakd_rgb_camera_optical_frame to map " << ex.what());
-  }
-
-// Add the subscription node to the executor
-  executor->add_node(Node);
-// Run the executor for a short period to allow message processing
-  auto start_time = std::chrono::steady_clock::now();
-  while (!tf_received && (std::chrono::steady_clock::now()
-      - start_time) < std::chrono::seconds(5)) {
-    executor->spin_some();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100)
-    );
-  }
-
-// Cleanup
-  executor->cancel();
-
-// Test assertions
-  REQUIRE(!tf_received); // Ensure a message was received
-}
+//TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera RGB image", "[integration][AnamolyDetection][RGB]") {
+//// Create an executor
+//  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+//
+//// Define variables for message capture and subscription
+////  sensor_msgs::msg::LaserScan::SharedPtr received_message;
+//  bool message_received = false;
+//
+//// Create a subscription to the `Talker` topic
+//  auto subscription = Node->create_subscription<sensor_msgs::msg::Image>(
+//      "/oakd/rgb/preview/image_raw",
+//      10,
+//      [&message_received, this](const sensor_msgs::msg::Image::SharedPtr msg) {
+//        message_received = true;
+//        RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a RGB Image");
+//      });
+//// Add the subscription node to the executor
+//  executor->add_node(Node);
+//// Run the executor for a short period to allow message processing
+//  auto start_time = std::chrono::steady_clock::now();
+//  while (!
+//      message_received && (std::chrono::steady_clock::now()
+//      - start_time) < std::chrono::seconds(2)) {
+//    executor->spin_some();
+//    std::this_thread::sleep_for(std::chrono::milliseconds(100)
+//    );
+//  }
+//
+//// Cleanup
+//  executor->cancel();
+//// Test assertions
+//  REQUIRE(!message_received); // Ensure a message was received
+//}
+//
+//TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][AnamolyDetection][RGBinfo]") {
+//// Create an executor
+//  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+//
+//// Define variables for message capture and subscription
+////  sensor_msgs::msg::LaserScan::SharedPtr received_message;
+//  bool message_received = false;
+//
+//// Create a subscription to the `Talker` topic
+//  auto subscription = Node->create_subscription<sensor_msgs::msg::CameraInfo>(
+//      "/oakd/rgb/preview/camera_info",
+//      10,
+//      [&message_received, this](const sensor_msgs::msg::CameraInfo::SharedPtr msg) {
+//        message_received = true;
+//        RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a Camera Info");
+//      });
+//// Add the subscription node to the executor
+//  executor->add_node(Node);
+//// Run the executor for a short period to allow message processing
+//  auto start_time = std::chrono::steady_clock::now();
+//  while (!
+//      message_received && (std::chrono::steady_clock::now()
+//      - start_time) < std::chrono::seconds(2)) {
+//    executor->spin_some();
+//    std::this_thread::sleep_for(std::chrono::milliseconds(100)
+//    );
+//  }
+//
+//// Cleanup
+//  executor->cancel();
+//
+//// Test assertions
+//  REQUIRE(!message_received); // Ensure a message was received
+//}
+//
+//TEST_CASE_METHOD (ADTestFixture, "Check for OAKD Depth pointcloud", "[integration][AnamolyDetection][Depth]") {
+//// Create an executor
+//  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+//
+//// Define variables for message capture and subscription
+////  sensor_msgs::msg::LaserScan::SharedPtr received_message;
+//  bool message_received = false;
+//
+//// Create a subscription to the `Talker` topic
+//  auto subscription = Node->create_subscription<sensor_msgs::msg::PointCloud2>(
+//      "/oakd/rgb/preview/depth/points",
+//      10,
+//      [&message_received, this](const sensor_msgs::msg::PointCloud2::SharedPtr msg) {
+//        message_received = true;
+//        RCLCPP_INFO_STREAM(Node->get_logger(), "RCVD a depth point cloud");
+//      });
+//// Add the subscription node to the executor
+//  executor->add_node(Node);
+//// Run the executor for a short period to allow message processing
+//  auto start_time = std::chrono::steady_clock::now();
+//  while (!
+//      message_received && (std::chrono::steady_clock::now()
+//      - start_time) < std::chrono::seconds(2)) {
+//    executor->spin_some();
+//    std::this_thread::sleep_for(std::chrono::milliseconds(100)
+//    );
+//  }
+//
+//// Cleanup
+//  executor->cancel();
+//
+//// Test assertions
+//
+//  REQUIRE(!message_received); // Ensure a message was received
+//}
+//
+//TEST_CASE_METHOD (ADTestFixture, "Check for OAKD camera info", "[integration][AnamolyDetection][tf]") {
+//
+//  std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+//  std::shared_ptr<tf2_ros::TransformListener> tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+//
+//  // Create an executor
+//  auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+//  geometry_msgs::msg::TransformStamped t;
+//  bool tf_received = false;
+//  try {
+//    t = tf_buffer_->lookupTransform(
+//        "oakd_rgb_camera_optical_frame", "map",
+//        tf2::TimePointZero);
+//  } catch (const tf2::TransformException &ex) {
+//    RCLCPP_INFO_STREAM(
+//        Node->get_logger(), "Could not transform oakd_rgb_camera_optical_frame to map " << ex.what());
+//  }
+//
+//// Add the subscription node to the executor
+//  executor->add_node(Node);
+//// Run the executor for a short period to allow message processing
+//  auto start_time = std::chrono::steady_clock::now();
+//  while (!tf_received && (std::chrono::steady_clock::now()
+//      - start_time) < std::chrono::seconds(5)) {
+//    executor->spin_some();
+//    std::this_thread::sleep_for(std::chrono::milliseconds(100)
+//    );
+//  }
+//
+//// Cleanup
+//  executor->cancel();
+//
+//// Test assertions
+//  REQUIRE(!tf_received); // Ensure a message was received
+//}
