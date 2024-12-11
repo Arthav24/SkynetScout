@@ -6,6 +6,5 @@ Here, you will find all the documentation for this project:
 
 * [Anomanly Detection](../anomaly_detection/docs/html/index.html)
 * [Skynet Manager](../skynet_manager/docs/html/index.html)
-* [Skynet Interfaces](../skynet_interfaces/docs/html/index.html)
 
 Have a nice day.

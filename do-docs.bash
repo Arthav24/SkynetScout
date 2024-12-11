@@ -36,14 +36,6 @@ colcon build \
        --event-handlers console_cohesion+ \
        --packages-select skynet_manager \
        --cmake-target "docs"
-###############################
-# 3. run my_controller's "src_docs" target
-###############################
-colcon build \
-       --event-handlers console_cohesion+ \
-       --packages-select skynet_interfaces \
-       --cmake-target "docs"
-##echo "open src/my_controller/src_docs/html/index.html"
 
 ###############################
 # 4. combine all src_docs
