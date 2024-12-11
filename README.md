@@ -62,8 +62,8 @@ Product backlog sheet can be found [here](https://umd0-my.sharepoint.com/:x:/g/p
 ## Sprint Planning
 Using AIP and pair programming project is planned in sprints.
 - Sprint 1 11/14/2024 to 11/20/2024
-- Sprint 2 11/21/2024 to 11/27/2024
-- Sprint 3 11/28/2024 to 12/04/2024
+- Sprint 2 11/21/2024 to 12/04/2024
+- Sprint 3 12/04/2024 to 12/11/2024
 
 Planning document can be found [here](https://umd0-my.sharepoint.com/:w:/g/personal/aniswa_umd_edu/Ea2nl0-B74VPrtfKL6HL5icBINMij0fw4KHIhCu9YgxoIg?e=M7oarH)
 
@@ -88,6 +88,13 @@ The proposal documentation for Phase 0 can be found [here](https://umd0-my.share
 colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --event-handlers console_cohesion+
 # Source overlay
 source install/setup.bash
+
+# Project has various launch files 
+# Module anomaly detection
+ros2 launch anomaly_detection anomaly_detection.launch.py enableCrackDetection:=true enableBeamDetection:=true enableObjectDetection:=true
+
+# TurtleBot3 in construction world
+ros2 launch skynet_manager turtlebot3_waffle_construction.launch.py
 ```
 ### Google Coding Style Verification
 To check how the written code conforms to the Google C++ style guide, 
