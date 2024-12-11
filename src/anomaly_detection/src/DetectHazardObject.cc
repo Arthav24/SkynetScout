@@ -58,6 +58,7 @@ scout::DetectHazardObject::processImage(cv::Mat image) {
     // Detect contours in the line mask
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(lineMask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    bool isDetected = false;
 
     // Filter and draw bounding boxes around continuous bending lines
     for (const auto& contour : contours) {
@@ -67,13 +68,18 @@ scout::DetectHazardObject::processImage(cv::Mat image) {
 
         // Consider only the continuous and bending lines based on threshold values
         if (arcLength > 250 && area > 300) {  // Thresholds for valid shapes
-            cv::Rect boundingBox = cv::boundingRect(contour);
-            // Draw the bounding rectangle around the detected object (currently commented out)
-            // cv::rectangle(output, boundingBox, cv::Scalar(0, 0, 255), 2);  // Draw rectangle in red
+            isDetected = true;
+            break;
         }
     }
 
-    // Set the status message indicating a hazardous object was found
-    status.message = "Found hazard";  
-    return status;  ///< Return the status containing the result of the detection
+         // If misalignment is detected, update the status
+      if (isDetected) {
+        status.level = skynet_interfaces::msg::AnomalyStatus::HOBJECT;
+        status.message = "Found Hazardous beams";
+       } else {
+        // If no misalignment is detected, set status to OK
+        status.level = skynet_interfaces::msg::AnomalyStatus::OK;
+        status.message = "";
+      }
 }
