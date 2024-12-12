@@ -25,13 +25,58 @@
 #include "skynet_manager/SkynetManager.h"
 
 /*ScoutManager node*/
+/**
+ * @brief Constructor for ScoutManager
+ */
 scout::ScoutManager::ScoutManager() : Node("scout_manager") {
+
   /*contructor placeholder*/
+  setup();
 }
 
-scout::ScoutManager::~ScoutManager() {
-  /*destructor placeholder*/
+/**
+ * @brief Destructor for ScoutManager
+ */
+scout::ScoutManager::~ScoutManager() { /*destructor placeholder*/ }
 
+/**
+ * Service callback for Return to home
+ * @param req request
+ * @param resp response
+ */
+void scout::ScoutManager::rthCallback(
+    const std::shared_ptr<skynet_interfaces::srv::ReturnToHome::Request> req,
+    std::shared_ptr<skynet_interfaces::srv::ReturnToHome::Response> resp) {
+  RCLCPP_INFO(this->get_logger(), "Received Return to home request");
+  resp->success = true;
+  resp->message = "Going back to home";
+}
+
+/**
+ * Service call back for Start Inspection service
+ * @param req request
+ * @param resp response
+ */
+
+void scout::ScoutManager::startCallback(
+    const std::shared_ptr<skynet_interfaces::srv::StartInspection::Request> req,
+    std::shared_ptr<skynet_interfaces::srv::StartInspection::Response> resp) {
+  RCLCPP_INFO(this->get_logger(), "Received Return to home request");
+  resp->success = true;
+  resp->message = "Starting Inspection";
+}
+
+/**
+ * @brief Sets up service servers
+ */
+void scout::ScoutManager::setup() {
+  rthService_ = this->create_service<skynet_interfaces::srv::ReturnToHome>(
+      "/rth", std::bind(&ScoutManager::rthCallback, this, std::placeholders::_1,
+                        std::placeholders::_2));
+  startService_ = this->create_service<skynet_interfaces::srv::StartInspection>(
+      "/start_inspection",
+      std::bind(&ScoutManager::startCallback, this, std::placeholders::_1,
+                std::placeholders::_2));
 }
 
 /*main method*/

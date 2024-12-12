@@ -8,9 +8,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 execute_process(COMMAND "rm" "-f" "${CMAKE_SOURCE_DIR}/compile_commands.json")
 execute_process(COMMAND "ln" "-s" "-r" "${CMAKE_BINARY_DIR}/compile_commands.json" "${CMAKE_SOURCE_DIR}/")
 
-if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
-endif ()
+endif()
 
 
 ###################################
@@ -29,7 +29,7 @@ find_package(Doxygen REQUIRED)
 ###################################################
 # Doxygen Rules
 ###################################################
-if (DOXYGEN_FOUND)
+if(DOXYGEN_FOUND)
     set(DOXYGEN_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)
     set(DOXYGEN_COLLABORATION_GRAPH YES)
     set(DOXYGEN_EXTRACT_ALL YES)
@@ -51,33 +51,34 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_DOT_GRAPH_MAX_NODES 100)
     set(DOXYGEN_MAX_DOT_GRAPH_DEPTH 0)
     set(DOXYGEN_DOT_TRANSPARENT YES)
-else ()
+else()
     message(FATAL_ERROR "Doxygen needs to be installed to generate the doxygen documentation")
-endif ()
+endif()
 
 ###################################
 # Specify Targets
 ###################################
 # create a target to build documentation
-doxygen_add_docs(docs    
+doxygen_add_docs(docs
         # List of files or directories
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/test
 )
 
-if (BUILD_TESTING)
+if(BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)
-    
+
     set(ament_cmake_copyright_FOUND TRUE)
-    
+
     set(ament_cmake_cpplint_FOUND TRUE)
+    set(ament_cmake_uncrustify_FOUND TRUE)
     ament_lint_auto_find_test_dependencies()
-    
+
     add_executable(scoutManagerTest
             test/skynet_manager_integration_test.cc
     )
-    
+
     target_link_libraries(scoutManagerTest
             catch_ros2::catch_ros2_with_node_main
     )
@@ -92,7 +93,7 @@ if (BUILD_TESTING)
     catch_ros2_add_integration_test(SkynetScoutManager_Test
             LAUNCH_FILE integration_test.launch.yaml
     )
-endif ()
+endif()
 
 
 add_executable(manager src/SkynetManager.cc)

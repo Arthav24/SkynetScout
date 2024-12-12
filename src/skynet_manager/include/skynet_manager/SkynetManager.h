@@ -26,10 +26,12 @@
 #define SKYNET_MANAGER_H_
 #include <chrono>
 #include <functional>
-#include <memory>
-#include <string>
-#include <rclcpp/rclcpp.hpp>
 #include <future>
+#include <memory>
+#include <rclcpp/rclcpp.hpp>
+#include <skynet_interfaces/srv/return_to_home.hpp>
+#include <skynet_interfaces/srv/start_inspection.hpp>
+#include <string>
 
 namespace scout {
 
@@ -38,14 +40,29 @@ namespace scout {
  * @brief Manager Class managing the entire pipeline
  */
 class ScoutManager : public rclcpp::Node {
- public:
+public:
   /*constructor*/
   ScoutManager();
 
   /*destructor*/
   ~ScoutManager();
- private:
+
+private:
+  void setup();
+
+  void rthCallback(
+      const std::shared_ptr<skynet_interfaces::srv::ReturnToHome::Request> req,
+      std::shared_ptr<skynet_interfaces::srv::ReturnToHome::Response> resp);
+
+  void startCallback(
+      const std::shared_ptr<skynet_interfaces::srv::StartInspection::Request>
+          req,
+      std::shared_ptr<skynet_interfaces::srv::StartInspection::Response> resp);
+
+  rclcpp::Service<skynet_interfaces::srv::ReturnToHome>::SharedPtr rthService_;
+  rclcpp::Service<skynet_interfaces::srv::StartInspection>::SharedPtr
+      startService_;
 };
 
-} // namespace 
-#endif  // SKYNET_MANAGER_H_
+} // namespace scout
+#endif // SKYNET_MANAGER_H_
