@@ -42,16 +42,16 @@ sudo apt-get install python3-colcon-clean # this for easy command to clean works
 
 ## UML Diagram - Initial
 Class dependency diagram of the proposed design
-![image](https://github.com/Arthav24/SkynetScout/blob/sprint2/UML/revised/UML_revised.svg)
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint3/UML/revised/UML_revised.svg)
 
 ## Sequence Diagram - Initial
-![image](https://github.com/Arthav24/SkynetScout/blob/sprint2/UML/revised/SequenceDiagram.png)
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint3/UML/revised/SequenceDiagram.png)
 
 ## Activity Diagram
-![image](https://github.com/Arthav24/SkynetScout/blob/sprint2/UML/initial/Activity.svg)
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint3/UML/initial/Activity.svg)
 
 ## Dependency Graph
-![image](https://github.com/Arthav24/SkynetScout/blob/sprint2/screenshots/depGraph.png)
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint3/screenshots/depGraph.png)
 
 ## ROS module communication - Initial 
 ![image](https://github.com/Arthav24/SkynetScout/blob/sprint1/UML/initial/ROS_comm.svg)

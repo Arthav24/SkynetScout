@@ -166,14 +166,14 @@ void scout::AnomalyDetection::setup() {
 
   // Create subscription to receive image data
   imgSubscriber_ = this->create_subscription<sensor_msgs::msg::Image>(
-      "/image", 10,
+      "/camera/image_raw", 10,
       std::bind(&AnomalyDetection::ImageCallback, this, std::placeholders::_1));
   RCLCPP_INFO(this->get_logger(), "Subscribed to '%s'",
               imgSubscriber_->get_topic_name());
 
   // Create subscription to receive camera information
   camInfoSubscriber_ = this->create_subscription<sensor_msgs::msg::CameraInfo>(
-      "/image/info", 10,
+      "/camera/camera_info", 10,
       std::bind(&AnomalyDetection::CaminfoCallback, this,
                 std::placeholders::_1));
   RCLCPP_INFO(this->get_logger(), "Subscribed to '%s'",
@@ -185,21 +185,6 @@ void scout::AnomalyDetection::setup() {
                                                                 10);
   RCLCPP_INFO(this->get_logger(), "Publishing to '%s'",
               anomaliesPublisher_->get_topic_name());
-
-  // Example code for adding service servers (commented out)
-  // startService_ = node_->create_service<std_srvs::srv::Trigger>(
-  //      "/start", std::bind(&WalkerNode::start_callback, this,
-  //                          std::placeholders::_1, std::placeholders::_2));
-  //  RCLCPP_INFO(node_->get_logger(), "Service server to '%s'",
-  //              startService_->get_service_name());
-  //
-  //  // Service server
-  //  stopService_ = node_->create_service<std_srvs::srv::Trigger>(
-  //      "/stop", std::bind(&WalkerNode::end_callback, this,
-  //      std::placeholders::_1,
-  //                         std::placeholders::_2));
-  //  RCLCPP_INFO(node_->get_logger(), "Service server to '%s'",
-  //              startService_->get_service_name());
 }
 
 void scout::AnomalyDetection::ImageCallback(
