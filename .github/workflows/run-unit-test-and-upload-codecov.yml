@@ -58,27 +58,27 @@ jobs:
       # We want to use GitHub CI checkout version 3 to check out our branch
       - uses: actions/checkout@v3
       
-      # Install some system pacakges
+      # Install some system packages
       - name: Install build packages
         run: |
           sudo apt update
-          sudo apt install -y doxygen lcov gcovr pandoc
+          sudo apt install -y doxygen lcov gcovr pandoc libopencv-dev libeigen3-dev python3-colcon-lcov-result
           source /opt/ros/humble/setup.bash
           sudo apt install -y ros-${ROS_DISTRO}-catch-ros2
           
-      # Run all unit test, integration test, and generate combined coverage report
+      # Run all unit test, integration test, and generate combined coverage report#
       - name: Build, run unit test, and generate coverage report
         run: |
           ./do-tests-and-coverage.bash
-          ./do-docs.bash
-          cat build/test_coverage_merged.info
+          ./do-src_docs.bash
+          cat lcov/total_coverage.info
 
       # Upload coverage result to CodeCov
       - name: Upload coverage result to CodeCov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # required (must add token in your github repo)
-          files: ${{github.workspace}}/build/test_coverage_merged.info
+          files: ${{github.workspace}}/lcov/total_coverage.info
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)      
           disable_search: true # optional (default = false)

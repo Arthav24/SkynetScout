@@ -21,27 +21,34 @@ source /opt/ros/humble/setup.bash
 set -u                          # re-enable undefined variable check
 
 ###############################
-# 2. run my_model's "docs" target
+# 2. run my_model's "src_docs" target
 ###############################
 colcon build \
        --event-handlers console_cohesion+ \
-       --packages-select my_model \
+       --packages-select anomaly_detection \
        --cmake-target "docs"
-##echo "open src/my_model/docs/html/index.html"
+##echo "open src/my_model/src_docs/html/index.html"
 
 ###############################
-# 3. run my_controller's "docs" target
+# 3. run my_controller's "src_docs" target
 ###############################
 colcon build \
        --event-handlers console_cohesion+ \
-       --packages-select my_controller \
+       --packages-select skynet_manager \
        --cmake-target "docs"
-##echo "open src/my_controller/docs/html/index.html"
+###############################
+# 3. run my_controller's "src_docs" target
+###############################
+colcon build \
+       --event-handlers console_cohesion+ \
+       --packages-select skynet_interfaces \
+       --cmake-target "docs"
+##echo "open src/my_controller/src_docs/html/index.html"
 
 ###############################
-# 4. combine all docs
+# 4. combine all src_docs
 ###############################
-DOCS_DIR=src/docs/
+DOCS_DIR=src/src_docs/
 pandoc -f markdown $DOCS_DIR/index.md > $DOCS_DIR/index.html
 open $DOCS_DIR/index.html || true
 
