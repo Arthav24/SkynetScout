@@ -43,3 +43,16 @@ The package integrates seamlessly with navigation and perception stacks in ROS2 
         ├── misaligned.png
         └── noCrack.png
 ```
+
+## Sequence Diagram for Beam Detection Detection
+
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint3/src/anomaly_detection/images/beam.jpeg)
+
+
+## Sequence Diagram for Crack Detection
+
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint3/src/anomaly_detection/images/crack.jpeg)
+
+## Sequence Diagram for Hazardous detection Detection
+
+![image](https://github.com/Arthav24/SkynetScout/blob/sprint3/src/anomaly_detection/images/hazard.jpeg)
