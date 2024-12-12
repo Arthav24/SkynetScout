@@ -54,9 +54,10 @@ scout::DetectCrack::processImage(cv::Mat image) {
   // Perform connected component analysis on the binary image
   cv::Mat labels, stats, centroids;
   int numComponents = cv::connectedComponentsWithStats(binary, labels, stats, centroids);
-
+  bool isDetected = false;
   // Iterate over each connected component to detect cracks
   for (int i = 1; i < numComponents; i++) {  // Start from 1 to ignore the background (component 0)
+  
     int area = stats.at<int>(i, cv::CC_STAT_AREA);  // Area of the connected component
     int x = stats.at<int>(i, cv::CC_STAT_LEFT);    // X-coordinate of the bounding box
     int y = stats.at<int>(i, cv::CC_STAT_TOP);     // Y-coordinate of the bounding box
@@ -66,12 +67,16 @@ scout::DetectCrack::processImage(cv::Mat image) {
     // Filter out small components based on area (ignoring noise or irrelevant small areas)
     if (area > 600) {  // Threshold area to only consider significant components
       cv::Rect boundingBox(x, y, width, height);  // Define the bounding box for the detected crack
-      // TODO: Draw the bounding rectangle on the image (commented out for now)
-      // cv::rectangle(output, boundingBox, cv::Scalar(0, 0, 255), 2);  // Draw rectangle in red color
+      isDetected = true;
     }
   }
-
-  // Set the status message for crack detection
-  status.message = "Found cracks";  // Message indicating cracks have been detected
-  return status;  // Return the status of the anomaly detection
+  // If crack is detected, update the status
+  if (isDetected) {
+    status.level = skynet_interfaces::msg::AnomalyStatus::CRACK;
+    status.message = "Found cracks";
+  } else {
+    // If no misalignment is detected, set status to OK
+    status.level = skynet_interfaces::msg::AnomalyStatus::OK;
+    status.message = "";
+  }
 }
